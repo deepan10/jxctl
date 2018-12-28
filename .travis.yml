@@ -23,9 +23,10 @@ install:
 before_script:
   - sudo unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
   - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
+  - sudo pip list
 
 script:
-  - tox
+  - sudo tox
 
 after_success:
   - sonar-scanner

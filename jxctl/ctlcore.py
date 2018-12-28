@@ -1,5 +1,6 @@
 import os
 import yaml
+import json
 
 class ctlCore:
     CONTEXT_FILE_PATH = "/.jxctl/config"
@@ -8,7 +9,29 @@ class ctlCore:
 
     cUser = cToken = cURL = cName = ''
 
+    def init_jxctl_context(self):
+        default_config_file = {
+            "current-context": "NULL",
+            "context": {
+                "url": "NULL",
+                "user": "NULL",
+                "token": "NULL",
+                "name": "NULL",
+                }
+        }
+        user_home = os.path.expanduser('~')
+        if not os.path.isdir(user_home+"/.jxctl"):
+            os.mkdir(user_home+"/.jxctl")
+        config_file = user_home+"/.jxctl/config"
+        if not os.path.isfile(config_file):
+            with open(config_file, 'w') as yaml_file:
+                yaml.dump(yaml.load(json.dumps(default_config_file)), yaml_file, default_flow_style=False)
+
+
+
     def __init__(self):
+        self.init_jxctl_context()
+
         cfile = open(self.CONTEXT_FILE)
         context = yaml.load(cfile)
         self.cUser = str(context["context"]["user"])
@@ -16,10 +39,11 @@ class ctlCore:
         self.cURL = str(context["context"]["url"])
         self.cName = str(context["context"]["name"])
         cfile.close()
+        #self.validate_context()
         #print(self.cName, self.cToken, self.cURL, self.cUser)
 
     def validate_context(self):
-        if self.cURL is not None and self.cToken is not None and self.cUser is not None:
+        if (self.cURL != "NULL") and (self.cToken != "NULL") and (self.cUser != "NULL"):
             return True
         else:
             return False

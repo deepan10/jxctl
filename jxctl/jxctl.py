@@ -157,27 +157,8 @@ def plugins(count):
     else:
         pyjenkins().list_all_plugins()
 
-def init_jxctl_context():
-    default_config_file = """
-    current-context: 
-    context: 
-        url: 
-        user: 
-        token: 
-        name: 
-    """
-    user_home = os.path.expanduser('~')
-    if not os.path.isdir(user_home+"/.jxctl"):
-        os.mkdir(user_home+"/.jxctl")
-    config_file = user_home+"/.jxctl/config"
-    if not os.path.isfile(config_file):
-        with open(config_file, 'w') as yaml_file:
-            yaml.dump(yaml.load(default_config_file), yaml_file, default_flow_style=False)
-
 if __name__ == '__main__':
-    init_jxctl_context()
     main()
 
 def start():
-    init_jxctl_context()
     main()

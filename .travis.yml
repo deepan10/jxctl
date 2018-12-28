@@ -6,6 +6,7 @@ language: python
 cache:
     directories:
      - .tox/
+     - /opt/
 
 addons:
   sonarcloud:
@@ -23,7 +24,9 @@ before_script:
 
 script:
   - tox
+
+after_success:
   - sonar-scanner
 
 notifications:
-  slack: deepan10:nTGqbkpHVVQ159ViRSnpQIjv
+  slack: deepan10:g0F1yGouO4Sj4034QN125LD0

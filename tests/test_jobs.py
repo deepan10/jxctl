@@ -34,4 +34,4 @@ class JenkinsListJobs(jxctlTestBase):
     def test_job_info(self, mock_jobs):
         mock_jobs.return_value = self.job_info
         job_info_list = self.jxctl_context._job_info('test-pipeline-job')
-        self.assertListEqual(job_info_list, self.job_info_return)
+        self.assertCountEqual(job_info_list, self.job_info_return)

@@ -16,6 +16,7 @@ addons:
 
 install:
   - sudo pip install tox
+  - sudo pip install -r requirements.txt
   - sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
 
 before_script:

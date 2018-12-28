@@ -35,6 +35,7 @@ A Command line interface for Jenkins.
 | Work      |   Description     | Status |
 |-----------|-------------------|--------|
 | Job       | Implemention Job & Build functionality(Create, Trigger, Detail, Delete) | InProgress | 
+| Testing   | Implement Test Cases, Suite | InProgress |
 | Handling Error   | Implement Exception Handling | ToDo | 
 | Node  | Implement Node functionality | ToDo | 
 

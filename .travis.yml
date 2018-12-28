@@ -1,0 +1,29 @@
+os:
+  - linux
+  
+language: python
+
+cache:
+    directories:
+     - .tox/
+
+addons:
+  sonarcloud:
+    organization: "myprojects"
+    token:
+      secure: $SONAR_TOKEN
+
+install:
+  - sudo pip install tox
+  - sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+
+before_script:
+  - sudo unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
+  - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
+
+script:
+  - tox
+  - sonar-scanner
+
+notifications:
+  slack: deepan10:nTGqbkpHVVQ159ViRSnpQIjv

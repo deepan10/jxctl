@@ -26,7 +26,7 @@ before_script:
   - sudo pip list
 
 script:
-  - tox
+  - sudo tox
 
 after_success:
   - sonar-scanner

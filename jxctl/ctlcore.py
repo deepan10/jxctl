@@ -1,15 +1,24 @@
+"""
+ctlcore - Core context command line methods
+"""
 import os
 import yaml
 import json
 
-class ctlCore:
+class CtlCore(object):
+    """
+    Command Line Core methods
+    Jenkins Context initialization, modification & validation
+    """
     CONTEXT_FILE_PATH = "/.jxctl/config"
     USER_HOME = os.path.expanduser('~')
     CONTEXT_FILE = USER_HOME + CONTEXT_FILE_PATH
-
     cUser = cToken = cURL = cName = ''
 
     def init_jxctl_context(self):
+        """
+        Initialize the Jenkins default context template with NULL values if config not available.
+        """
         default_config_file = {
             "current-context": "NULL",
             "context": {
@@ -30,8 +39,10 @@ class ctlCore:
 
 
     def __init__(self):
+        """
+        Init the CtlCore for Command Line context.
+        """
         self.init_jxctl_context()
-
         cfile = open(self.CONTEXT_FILE)
         context = yaml.load(cfile)
         self.cUser = str(context["context"]["user"])
@@ -39,26 +50,28 @@ class ctlCore:
         self.cURL = str(context["context"]["url"])
         self.cName = str(context["context"]["name"])
         cfile.close()
-        #self.validate_context()
-        #print(self.cName, self.cToken, self.cURL, self.cUser)
 
     def validate_context(self):
-        if (self.cURL != "NULL") and (self.cToken != "NULL") and (self.cUser != "NULL"):
+        """
+        Validate the context to proceed with Jenkins CTL Operations.
+        """
+        if self.cURL != "NULL" and self.cToken != "NULL" and self.cUser != "NULL":
             return True
         else:
             return False
 
     def set_context(self, url, user, token, name):
+        """
+        Modify the context config
+        """
         if user is not None:
             self.cUser = user
         if token is not None:
             self.cToken = token
         if url is not None:
             self.cURL = url
-
         if name is not None:
-            self.cName = name        
-
+            self.cName = name
         context_file = """
             current-context: %s
             context :
@@ -68,9 +81,6 @@ class ctlCore:
                 name: %s
             """ % (self.cName, self.cURL, self.cUser, self.cToken, self.cName)
         #print(yaml.dump(yaml.load(context_file), default_flow_style=False))
-
         with open(self.CONTEXT_FILE, 'w') as cFile:
             yaml.dump(yaml.load(context_file), cFile, default_flow_style=False)
-
         print("jxctl - context updated")
-        

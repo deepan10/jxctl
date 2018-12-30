@@ -8,8 +8,8 @@ import sys
 sys.path.append("..")
 
 import unittest
-from jxctl.jxcore import pyjenkins
-from jxctl.ctlcore import ctlCore
+from jxctl.jxcore import pyJenkins
+from jxctl.ctlcore import CtlCore
 
 class jxctlTestBase(unittest.TestCase):
     def load_JSONS(self):
@@ -308,10 +308,10 @@ class jxctlTestBase(unittest.TestCase):
                 ['Last Build', [5]], 
                 ['Builds', [5, 4, 3, 2, 1]]
             ]
-    @patch.object(ctlCore, 'validate_context')
+    @patch.object(CtlCore, 'validate_context')
     def init_pyjenkins(self, mocl_context=False):
         mocl_context.return_value = True
-        self.jxctl_context = pyjenkins()
+        self.jxctl_context = pyJenkins()
     
     def setUp(self):
         super(jxctlTestBase, self).setUp()

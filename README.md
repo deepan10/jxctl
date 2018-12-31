@@ -1,4 +1,4 @@
-# jxctl
+# jxctl [![Build Status](https://travis-ci.com/deepan10/jxctl.png?branch=develop)](https://travis-ci.com/deepan10/jxctl)
 A Command line interface for Jenkins.
 
 ## Installation
@@ -36,8 +36,10 @@ A Command line interface for Jenkins.
 |-----------|-------------------|--------|
 | Job       | Implemention Job & Build functionality(Create, Trigger, Detail, Delete) | InProgress | 
 | Testing   | Implement Test Cases, Suite | InProgress |
-| Handling Error   | Implement Exception Handling | ToDo | 
+| Handling Error   | Implement Exception Handling | InProgress | 
 | Node  | Implement Node functionality | ToDo | 
+| Report | Implement Report functionality | ToDo |
+| Docs | Document Generation | ToDo |
 
 ## Contribution 
 We are happy to accept PR's. Those who are interested in contribution please have a look at below functional area's which are needed.
@@ -45,3 +47,8 @@ We are happy to accept PR's. Those who are interested in contribution please hav
     * Testing
     * Docs
     * Fine-Tuning
+
+## Build & Test 
+
+* Travis Build [https://travis-ci.com/deepan10/jxctl](https://travis-ci.com/deepan10/jxctl)
+* SonarCloud [https://sonarcloud.io/dashboard?id=jxctl](https://sonarcloud.io/dashboard?id=jxctl)

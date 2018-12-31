@@ -17,7 +17,7 @@ try:
 except ImportError:
     from .ctxcore import CtxCore
 
-class pyJenkins(CtxCore):
+class PyJenkins(CtxCore):
     """
     jxtl core Jenkins operation methods
     """
@@ -105,22 +105,22 @@ class pyJenkins(CtxCore):
         info_list = [["URL", self.URL], ["Version", self.version], ["User", self.username]]
         print(tabulate(info_list, headers=['Jenkins', 'Description'], tablefmt='orgtbl'))
 
-    def displayTable(self, displayList = [], displayHeader = [], countFlag = False):
+    def display_table(self, display_list = [], display_header = [], count_flag = False):
         """
         Display the result in list to Table format.
-        Having the special param countFlag, If true will display the count of the list in table.
-        :param name: OutputList displayList ``list``
-        :param name: HeaderList displayHeader ``list``
-        :param name: Count countFlag ``bool``
+        Having the special param count_flag, If true will display the count of the list in table.
+        :param name: OutputList display_list ``list``
+        :param name: HeaderList display_header ``list``
+        :param name: Count count_flag ``bool``
 
         Example::
-            >>> self.displayTable(list_item, list_header)
-            >>> self.displayTable(list_item, list_header, countFlag=True)
+            >>> self.display_table(list_item, list_header)
+            >>> self.display_table(list_item, list_header, count_flag=True)
         """
-        if not countFlag:
-            print(tabulate(displayList, headers=displayHeader, tablefmt='orgtbl'))
+        if not count_flag:
+            print(tabulate(display_list, headers=display_header, tablefmt='orgtbl'))
         else:
-            print(tabulate([[len(displayList)]], headers=displayHeader, tablefmt='orgtbl'))
+            print(tabulate([[len(display_list)]], headers=display_header, tablefmt='orgtbl'))
 
     @classmethod
     def json2list(self, json):
@@ -168,30 +168,30 @@ class pyJenkins(CtxCore):
                 for x in self.search_json(j, kv):
                     yield x
 
-    def detailsFromJSON(self, srcJSON, searchJSON, jobflag):
+    def details_from_JSON(self, src_json, search_json, jobflag):
         """
         Returns Details from JSON by giving source DICT & search DICT (items needs to be fetched) as a list
-        :param name: Source JSON srcJSON ``dict``
-        :param name: Search JSON searchJSON ``dict``
+        :param name: Source JSON src_json ``dict``
+        :param name: Search JSON search_json ``dict``
         :param name: Determine source DICT is JOB / Build ``bool``
         :returns: INFO list info_list ``list``
 
         Example::
-            >>> detailsFromJSON(srcJSON, searchJSON, true):
+            >>> details_from_JSON(src_json, search_json, true):
         """
         info_list = []
-        for name, item in searchJSON.items():
+        for name, item in search_json.items():
             if type(item) is list:
-                if len(list(self.search_json(srcJSON, item[0]))) != 0:
+                if len(list(self.search_json(src_json, item[0]))) != 0:
                     if jobflag:
-                        info_list.append([name, list(self.search_json(srcJSON[item[0]], item[1]))])
+                        info_list.append([name, list(self.search_json(src_json[item[0]], item[1]))])
                     else:
-                        search_list = list(self.search_json(srcJSON[item[0]], item[1]))
-                        if len(search_list): 
+                        search_list = list(self.search_json(src_json[item[0]], item[1]))
+                        if len(search_list):
                             info_list.append([name, search_list[0]])
             else:
-                if len(list(self.search_json(srcJSON, item))) != 0:
-                    info_list.append([name, srcJSON[item]])
+                if len(list(self.search_json(src_json, item))) != 0:
+                    info_list.append([name, src_json[item]])
         return info_list
 
 ##################################################################################################################################
@@ -226,9 +226,9 @@ class pyJenkins(CtxCore):
         """
         jobs_list = self._list_all_jobs()
         if not count:
-            self.displayTable(jobs_list, ['Name', 'URL'])
+            self.display_table(jobs_list, ['Name', 'URL'])
         else:
-            self.displayTable(jobs_list, ['No. of Jobs'], countFlag=True)
+            self.display_table(jobs_list, ['No. of Jobs'], count_flag=True)
 
     def _list_jobs(self, option_list):
         """
@@ -257,9 +257,9 @@ class pyJenkins(CtxCore):
         """
         jobs_list = self._list_jobs(option_list)
         if not count:
-            self.displayTable(jobs_list, ['Name', 'URL'])
+            self.display_table(jobs_list, ['Name', 'URL'])
         else:
-            self.displayTable(jobs_list, ['No. of Jobs'], countFlag=True)
+            self.display_table(jobs_list, ['No. of Jobs'], count_flag=True)
 
     # jxcore - Plugin functions
     def _list_all_plugins(self):
@@ -284,9 +284,9 @@ class pyJenkins(CtxCore):
         """
         plugins_list = self._list_all_plugins()
         if not count:
-            self.displayTable(plugins_list, ['Plugin Name', 'Short Name', 'Version'])
+            self.display_table(plugins_list, ['Plugin Name', 'Short Name', 'Version'])
         else:
-            self.displayTable(plugins_list, ['No. of Plugins'], True)
+            self.display_table(plugins_list, ['No. of Plugins'], True)
 
     # jxcore - genrate report
     def genrate_report(self, report, json):
@@ -312,7 +312,7 @@ class pyJenkins(CtxCore):
             >> _job_info(job_name)
         """
         job_json = self.server.get_job_info(job_name)
-        job_info_list = self.detailsFromJSON(job_json, self.JOB_DETAILS, jobflag=True)
+        job_info_list = self.details_from_JSON(job_json, self.JOB_DETAILS, jobflag=True)
         return job_info_list
 
     def job_info(self, job_name, debug=False, report=False):
@@ -325,17 +325,17 @@ class pyJenkins(CtxCore):
         Example::
             >>> job_info(job_name)
         """
-        self.displayTable(self._job_info(job_name), ["Job Data","Detail"])
+        self.display_table(self._job_info(job_name), ["Job Data","Detail"])
 
     def _build_info(self, job_name, build_no):
         build_json = self.server.get_build_info(job_name, build_no)
-        build_info_list = self.detailsFromJSON(build_json, self.BUILD_DETAILS, jobflag=False)
+        build_info_list = self.details_from_JSON(build_json, self.BUILD_DETAILS, jobflag=False)
         return build_info_list
     def build_info(self, job_name, build_no):
         """
         Build Info
         """
-        self.displayTable(self._build_info(job_name, build_no),["Build Data","Detail"])
+        self.display_table(self._build_info(job_name, build_no),["Build Data","Detail"])
 
     def job_build(self, job_name):
         """

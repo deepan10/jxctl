@@ -12,10 +12,10 @@ import platform
 from pyfiglet import Figlet
 
 try:
-    from jxcore import pyJenkins
+    from jxcore import PyJenkins
     from ctxcore import CtxCore
 except ImportError:
-    from .jxcore import pyJenkins
+    from .jxcore import PyJenkins
     from .ctxcore import CtxCore
 
 # Globals
@@ -91,7 +91,7 @@ def info():
     """
     f = Figlet(font='smslant')
     click.echo(f.renderText('jxctl'))
-    pyJenkins().info()
+    PyJenkins().info()
 
 #jxctl - get jobs
 @get.command()
@@ -118,18 +118,18 @@ def jobs(ctx, count, all, maven, freestyle, pipeline, multi_branch, matrix, fold
         if count:
             if not all:
                 for item in option_dist:
-                    if(option_dist[item]):
+                    if option_dist[item]:
                         option_list.append(item)
-                pyJenkins().list_jobs(option_list, count=True)
+                PyJenkins().list_jobs(option_list, count=True)
             else:
-                pyJenkins().list_all_jobs(count=True)
+                PyJenkins().list_all_jobs(count=True)
         elif all:
-            pyJenkins().list_all_jobs()
+            PyJenkins().list_all_jobs()
         else:
             for item in option_dist:
                 if option_dist[item]:
                     option_list.append(item)
-            pyJenkins().list_jobs(option_list)
+            PyJenkins().list_jobs(option_list)
     else:
         print_help(ctx, None,  value=True)
 
@@ -146,11 +146,11 @@ def job(jobname, debug, build, report, buildinfo, testinfo):
     Job level Operations
     """
     if buildinfo:
-        pyJenkins().build_info(jobname, buildinfo)
+        PyJenkins().build_info(jobname, buildinfo)
     elif build:
-        pyJenkins().job_build(jobname)
+        PyJenkins().job_build(jobname)
     else:
-        pyJenkins().job_info(jobname, debug, report)
+        PyJenkins().job_info(jobname, debug, report)
 
 @get.command()
 @click.option('--count', '-c', is_flag=True, help='Returns the number of plugin installed')
@@ -159,9 +159,9 @@ def plugins(count):
     List all installed plugins of Jenkins Context
     """
     if count:
-        pyJenkins().list_all_plugins(count=True)
+        PyJenkins().list_all_plugins(count=True)
     else:
-        pyJenkins().list_all_plugins()
+        PyJenkins().list_all_plugins()
 
 if __name__ == '__main__':
     main()

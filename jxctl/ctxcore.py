@@ -14,6 +14,7 @@ class CtxCore(object):
     USER_HOME = os.path.expanduser('~')
     CONTEXT_FILE = USER_HOME + CONTEXT_FILE_PATH
 
+    @classmethod
     def init_default_context(self):
         """
         Initialize the Jenkins default context template with NULL values if config not available.
@@ -43,7 +44,8 @@ class CtxCore(object):
             cfile = open(self.CONTEXT_FILE)
             context = yaml.load(cfile)
             cfile.close()
-            return (str(context["context"]["user"]), str(context["context"]["token"]), str(context["context"]["url"]), str(context["context"]["name"]))
+            return str(context["context"]["user"]), str(context["context"]["token"]), \
+                    str(context["context"]["url"]), str(context["context"]["name"])
         except FileNotFoundError:
             raise FileNotFoundError("File Not Found Error")
 

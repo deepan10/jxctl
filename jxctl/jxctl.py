@@ -13,10 +13,10 @@ from pyfiglet import Figlet
 
 try:
     from jxcore import pyJenkins
-    from ctlcore import CtlCore
+    from ctxcore import CtxCore
 except ImportError:
     from .jxcore import pyJenkins
-    from .ctlcore import CtlCore
+    from .ctxcore import CtxCore
 
 # Globals
 __author__ = 'Deepankumar Loganathan'
@@ -82,7 +82,7 @@ def set(url, user, token, name):
     """
     Set Jenkins Context
     """
-    CtlCore().set_context(url, user, token, name)
+    CtxCore().set_context(url, user, token, name)
 
 @context.command()
 def info():

@@ -13,11 +13,11 @@ from json2html import json2html
 #sys.path.append("..")
 
 try:
-    from ctlcore import CtlCore
+    from ctxcore import CtxCore
 except ImportError:
-    from .ctlcore import CtlCore
+    from .ctxcore import CtxCore
 
-class pyJenkins(object):
+class pyJenkins(CtxCore):
     """
     jxtl core Jenkins operation methods
     """
@@ -79,16 +79,16 @@ class pyJenkins(object):
 
     def __init__(self):
         """
-        Initialize the Jenkins Context and CtlCore to access the API
+        Initialize the Jenkins Context and CtxCore to access the API
         """
-        ctl = CtlCore()
-        if ctl.validate_context():
+        super().__init__()
+        if self.validate_context():
             try:
-                self.server = jenkins.Jenkins(ctl.cURL, username=ctl.cUser, password=ctl.cToken)
-                self.URL = ctl.cURL
+                self.server = jenkins.Jenkins(self.ctx_url, username=self.ctx_user, password=self.ctx_token)
+                self.URL = self.ctx_url
                 self.cwd = os.getcwd()
             except Exception as e:
-                print(e)
+                print("Init Context Core", e)
                 exit()
         else:
             print("Please validate the Jenkins Context before proceeding...")
@@ -132,7 +132,7 @@ class pyJenkins(object):
         Example::
             >>> self.json2list(json_object)
         """
-        return [(key,value) for key,value in json.items()]
+        return [[key,value] for key,value in json.items()]
 
     def key_from_value(self, search_value):
         """
@@ -186,7 +186,9 @@ class pyJenkins(object):
                     if jobflag:
                         info_list.append([name, list(self.search_json(srcJSON[item[0]], item[1]))])
                     else:
-                        info_list.append([name, list(self.search_json(srcJSON[item[0]], item[1]))[0]])
+                        search_list = list(self.search_json(srcJSON[item[0]], item[1]))
+                        if len(search_list): 
+                            info_list.append([name, search_list[0]])
             else:
                 if len(list(self.search_json(srcJSON, item))) != 0:
                     info_list.append([name, srcJSON[item]])
@@ -203,13 +205,15 @@ class pyJenkins(object):
             >>> _list_all_jobs()
         """
         jobs_list = []
+        jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
         try:
-            jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
             for job_item in jobs:
                 if job_item["_class"] not in self.non_jobs_list:
                     jobs_list.append([job_item["fullname"], job_item["url"]])
-        except ValueError as ve:
-            print("Json Error", ve)
+        except KeyError:
+            raise KeyError("Key not found")
+        except Exception as exp:
+            print(exp)
         return jobs_list
 
     def list_all_jobs(self, count = False):
@@ -323,20 +327,15 @@ class pyJenkins(object):
         """
         self.displayTable(self._job_info(job_name), ["Job Data","Detail"])
 
-    def build_info(self, jobName, buildNumber):
+    def _build_info(self, job_name, build_no):
+        build_json = self.server.get_build_info(job_name, build_no)
+        build_info_list = self.detailsFromJSON(build_json, self.BUILD_DETAILS, jobflag=False)
+        return build_info_list
+    def build_info(self, job_name, build_no):
         """
         Build Info
         """
-        build_json = self.server.get_build_info(jobName, buildNumber)
-        #build_info_list = []
-        #for name, item in self.BUILD_DETAILS.items():
-            #if type(item) is list:
-                #if len(list(self.search_json(build_json, item[0]))) != 0:
-                    #build_info_list.append([name, list(self.search_json(build_json[item[0]], item[1]))[0]])
-            #else:
-                #if len(list(self.search_json(build_json, item))) != 0:
-                    #build_info_list.append([name, build_json[item]])
-        self.displayTable(self.detailsFromJSON(build_json, self.BUILD_DETAILS, jobflag=False),["Build Data","Detail"])
+        self.displayTable(self._build_info(job_name, build_no),["Build Data","Detail"])
 
     def job_build(self, job_name):
         """

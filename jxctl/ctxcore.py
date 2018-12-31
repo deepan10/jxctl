@@ -1,11 +1,11 @@
 """
-ctlcore - Core context command line methods
+ctxcore - Core context command line methods
 """
 import os
 import yaml
 import json
 
-class CtlCore(object):
+class CtxCore(object):
     """
     Command Line Core methods
     Jenkins Context initialization, modification & validation
@@ -13,9 +13,8 @@ class CtlCore(object):
     CONTEXT_FILE_PATH = "/.jxctl/config"
     USER_HOME = os.path.expanduser('~')
     CONTEXT_FILE = USER_HOME + CONTEXT_FILE_PATH
-    cUser = cToken = cURL = cName = ''
 
-    def init_jxctl_context(self):
+    def init_default_context(self):
         """
         Initialize the Jenkins default context template with NULL values if config not available.
         """
@@ -36,26 +35,30 @@ class CtlCore(object):
             with open(config_file, 'w') as yaml_file:
                 yaml.dump(yaml.load(json.dumps(default_config_file)), yaml_file, default_flow_style=False)
 
-
+    def get_config_context(self):
+        """
+        Get context info from config file
+        """
+        try:
+            cfile = open(self.CONTEXT_FILE)
+            context = yaml.load(cfile)
+            cfile.close()
+            return (str(context["context"]["user"]), str(context["context"]["token"]), str(context["context"]["url"]), str(context["context"]["name"]))
+        except FileNotFoundError:
+            raise FileNotFoundError("File Not Found Error")
 
     def __init__(self):
         """
-        Init the CtlCore for Command Line context.
+        Init the CtxCore for Command Line context.
         """
-        self.init_jxctl_context()
-        cfile = open(self.CONTEXT_FILE)
-        context = yaml.load(cfile)
-        self.cUser = str(context["context"]["user"])
-        self.cToken = str(context["context"]["token"])
-        self.cURL = str(context["context"]["url"])
-        self.cName = str(context["context"]["name"])
-        cfile.close()
+        self.init_default_context()
+        self.ctx_user, self.ctx_token, self.ctx_url, self.ctx_name = self.get_config_context()
 
     def validate_context(self):
         """
         Validate the context to proceed with Jenkins CTL Operations.
         """
-        if self.cURL != "NULL" and self.cToken != "NULL" and self.cUser != "NULL":
+        if self.ctx_url != "NULL" and self.ctx_token != "NULL" and self.ctx_user != "NULL":
             return True
         else:
             return False
@@ -65,13 +68,13 @@ class CtlCore(object):
         Modify the context config
         """
         if user is not None:
-            self.cUser = user
+            self.ctx_user = user
         if token is not None:
-            self.cToken = token
+            self.ctx_token = token
         if url is not None:
-            self.cURL = url
+            self.ctx_url = url
         if name is not None:
-            self.cName = name
+            self.ctx_name = name
         context_file = """
             current-context: %s
             context :
@@ -79,7 +82,7 @@ class CtlCore(object):
                 user: %s
                 token: %s
                 name: %s
-            """ % (self.cName, self.cURL, self.cUser, self.cToken, self.cName)
+            """ % (self.ctx_name, self.ctx_url, self.ctx_user, self.ctx_token, self.ctx_name)
         #print(yaml.dump(yaml.load(context_file), default_flow_style=False))
         with open(self.CONTEXT_FILE, 'w') as cFile:
             yaml.dump(yaml.load(context_file), cFile, default_flow_style=False)

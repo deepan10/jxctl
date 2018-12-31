@@ -1,3 +1,6 @@
+"""
+jxctl - command line implementations
+"""
 import os
 import sys
 import click
@@ -6,14 +9,14 @@ import platform
 
 #sys.path.append("..")
 
-from pyfiglet import Figlet 
+from pyfiglet import Figlet
 
 try:
-    from jxcore import pyjenkins
-    from ctlcore import ctlCore
-except ImportError:    
-    from .jxcore import pyjenkins
-    from .ctlcore import ctlCore
+    from jxcore import PyJenkins
+    from ctxcore import CtxCore
+except ImportError:
+    from .jxcore import PyJenkins
+    from .ctxcore import CtxCore
 
 # Globals
 __author__ = 'Deepankumar Loganathan'
@@ -22,6 +25,9 @@ __version__ = '0.0.4'
 __pypi__ = 'https://pypi.org/project/jxctl/'
 
 def print_help(ctx, param, value):
+    """
+    Print the help message in terminal when options not passed
+    """
     if value is False:
         return
     click.echo(ctx.get_help())
@@ -39,7 +45,7 @@ def version():
     """
     Show the version and info of jxctl
     """
-    f = Figlet(font='smslant')    
+    f = Figlet(font='smslant')
     click.echo(f.renderText('jxctl'))
     click.echo('A cli interface for your Jenkins Instance')
     click.echo("=========================================")
@@ -75,17 +81,17 @@ def get():
 def set(url, user, token, name):
     """
     Set Jenkins Context
-    """   
-    ctlCore().set_context(url, user, token, name)    
+    """
+    CtxCore().set_context(url, user, token, name)
 
 @context.command()
 def info():
     """
     Show the infomation about your Jenkins Context
     """
-    f = Figlet(font='smslant')    
+    f = Figlet(font='smslant')
     click.echo(f.renderText('jxctl'))
-    pyjenkins().info()
+    PyJenkins().info()
 
 #jxctl - get jobs
 @get.command()
@@ -98,7 +104,9 @@ def info():
 @click.option('--matrix', is_flag=True, help='List all matrix jobs')
 @click.option('--folders', is_flag=True, help='List all folders in Jenkins context')
 @click.option('--org', is_flag=True, help='List all Organization jobs')
-@click.option('--help',  is_flag=True, expose_value=False, is_eager=False, callback=print_help, help="Print help message")
+@click.option('--help',  is_flag=True, expose_value=False,\
+                        is_eager=False, callback=print_help,\
+                        help="Print help message")
 @click.pass_context
 def jobs(ctx, count, all, maven, freestyle, pipeline, multi_branch, matrix, folders, org):
     """
@@ -106,22 +114,22 @@ def jobs(ctx, count, all, maven, freestyle, pipeline, multi_branch, matrix, fold
     """
     option_dist = { "all" : all, "maven" : maven, "freestyle" : freestyle, "pipeline" : pipeline, "multi-branch" : multi_branch, "matrix" : matrix, "folders" : folders, "org" : org}
     option_list = []
-    if(any(option_dist.values())):
-        if(count):
-            if(not all):                        
+    if any(option_dist.values()):
+        if count:
+            if not all:
                 for item in option_dist:
-                    if(option_dist[item]):
+                    if option_dist[item]:
                         option_list.append(item)
-                pyjenkins().list_jobs(option_list, count=True)
+                PyJenkins().list_jobs(option_list, count=True)
             else:
-                pyjenkins().list_all_jobs(count=True)
-        elif(all):
-            pyjenkins().list_all_jobs()  
+                PyJenkins().list_all_jobs(count=True)
+        elif all:
+            PyJenkins().list_all_jobs()
         else:
             for item in option_dist:
-                if(option_dist[item]):
+                if option_dist[item]:
                     option_list.append(item)
-            pyjenkins().list_jobs(option_list) 
+            PyJenkins().list_jobs(option_list)
     else:
         print_help(ctx, None,  value=True)
 
@@ -138,13 +146,11 @@ def job(jobname, debug, build, report, buildinfo, testinfo):
     Job level Operations
     """
     if buildinfo:
-        pyjenkins().build_info(jobname, buildinfo)
+        PyJenkins().build_info(jobname, buildinfo)
     elif build:
-        pyjenkins().job_info(jobname, debug, report)
-    #    pyjenkins().job_build(jobname)
+        PyJenkins().job_build(jobname)
     else:
-        pyjenkins().job_info(jobname, debug, report)
-    
+        PyJenkins().job_info(jobname, debug, report)
 
 @get.command()
 @click.option('--count', '-c', is_flag=True, help='Returns the number of plugin installed')
@@ -152,13 +158,16 @@ def plugins(count):
     """
     List all installed plugins of Jenkins Context
     """
-    if(count):
-        pyjenkins().list_all_plugins(count=True)
+    if count:
+        PyJenkins().list_all_plugins(count=True)
     else:
-        pyjenkins().list_all_plugins()
+        PyJenkins().list_all_plugins()
 
 if __name__ == '__main__':
     main()
 
 def start():
+    """
+    start jxctl
+    """
     main()

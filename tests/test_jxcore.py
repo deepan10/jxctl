@@ -7,4 +7,4 @@ class jxCoreTest(jxctlTestBase):
             'name': 'test'
         }
         return_value = [['_class', 'FreeStyle'], ['name', 'test']]
-        self.assertListEqual(self.jxctl_context.json2list(json_object),return_value)
+        self.assertCountEqual(self.jxctl_context.json2list(json_object),return_value)

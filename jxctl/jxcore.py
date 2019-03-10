@@ -2,11 +2,8 @@
 jxcore - Core menthods to intract with Jenkins API
 """
 import os
-import sys
-import yaml
 import jenkins
-import json
-import time
+import requests
 from tabulate import tabulate
 from json2html import json2html
 
@@ -40,7 +37,7 @@ class PyJenkins(CtxCore):
         "com.cloudbees.hudson.plugins.folder.Folder",
         "com.cloudbees.hudson.plugins.modeling.impl.builder.BuilderTemplate",
         "com.cloudbees.hudson.plugins.modeling.impl.jobTemplate.JobTemplate"
-	]
+        ]
 
     build_info_dict = {
         "_class" : "Style",
@@ -59,7 +56,7 @@ class PyJenkins(CtxCore):
         "URL" : "url",
         "Commit Id" : ['actions', "SHA1"],
         "Job Name" : ['actions', "name"],
-        "SCM URL" : ["actions","remoteUrls"],
+        "SCM URL" : ["actions", "remoteUrls"],
         "Comment" : ["changeSets", "comment"],
         "Name" : "fullDisplayName",
         "Build Status" : "result",
@@ -70,9 +67,9 @@ class PyJenkins(CtxCore):
         "Name" : "fullName",
         "URL" : "url",
         "Type" : "_class",
-        "Last Completed Build" : ["lastCompletedBuild","number"],
-        "Last Sucessful Build" : ["lastSuccessfulBuild","number"],
-        "Last Build" : ["lastBuild","number"],
+        "Last Completed Build" : ["lastCompletedBuild", "number"],
+        "Last Sucessful Build" : ["lastSuccessfulBuild", "number"],
+        "Last Build" : ["lastBuild", "number"],
         "SCM Type" : ["scm", "_class"],
         "Builds" : ["builds", "number"]
     }
@@ -84,11 +81,13 @@ class PyJenkins(CtxCore):
         super().__init__()
         if self.validate_context():
             try:
-                self.server = jenkins.Jenkins(self.ctx_url, username=self.ctx_user, password=self.ctx_token)
-                self.URL = self.ctx_url
+                self.server = jenkins.Jenkins(self.ctx_url,
+                                              username=self.ctx_user,
+                                              password=self.ctx_token)
+                self.URL = self.ctx_url  # pylint: disable=invalid-name
                 self.cwd = os.getcwd()
-            except Exception as e:
-                print("Init Context Core", e)
+            except jenkins.JenkinsException as server_error:
+                print("Init Context Core", server_error)
                 exit()
         else:
             print("Please validate the Jenkins Context before proceeding...")
@@ -100,12 +99,16 @@ class PyJenkins(CtxCore):
         Example::
             >>> jxctl context info
         """
-        self.username = self.server.get_whoami()["fullName"]
-        self.version = self.server.get_version()
-        info_list = [["URL", self.URL], ["Version", self.version], ["User", self.username]]
-        print(tabulate(info_list, headers=['Jenkins', 'Description'], tablefmt='orgtbl'))
+        try:
+            self.username = self.server.get_whoami()["fullName"]
+            self.version = self.server.get_version()
+            info_list = [["URL", self.URL], ["Version", self.version], ["User", self.username]]
+            print(tabulate(info_list, headers=['Jenkins', 'Description'], tablefmt='orgtbl'))
+        except requests.exceptions.ConnectionError:
+            print("Connection Error... Make sure your Jenkins context is up and running")
 
-    def display_table(self, display_list = [], display_header = [], count_flag = False):
+    @staticmethod
+    def display_table(display_list, display_header, count_flag=False):
         """
         Display the result in list to Table format.
         Having the special param count_flag, If true will display the count of the list in table.
@@ -122,8 +125,8 @@ class PyJenkins(CtxCore):
         else:
             print(tabulate([[len(display_list)]], headers=display_header, tablefmt='orgtbl'))
 
-    @classmethod
-    def json2list(self, json):
+    @staticmethod
+    def json2list(json):
         """
         Convert the JSON to LIST
         :param name: JSON Object json ``dist``
@@ -132,7 +135,7 @@ class PyJenkins(CtxCore):
         Example::
             >>> self.json2list(json_object)
         """
-        return [[key,value] for key,value in json.items()]
+        return [[key, value] for key, value in json.items()]
 
     def key_from_value(self, search_value):
         """
@@ -143,58 +146,63 @@ class PyJenkins(CtxCore):
         Example::
             >>> key_from_value(search_value)
         """
-        for key,value in self.option_dist.items():
+        return_key = None
+        for key, value in self.option_dist.items():
             if value == search_value:
-                return key
+                return_key = key
+                break
+        return return_key
 
-    def search_json(self, node, kv):
+    def search_json(self, node, src_json):
         """
         Search key, value from JSON
         :param name: Source JSON node ``dist``
-        :param name: Search string kv ``str``
+        :param name: Search string src_json ``str``
         :returns: JSON ``dist``
 
         Example::
-            >>> search_json(node, kv)
+            >>> search_json(node, src_json)
         """
         if isinstance(node, list):
-            for i in node:
-                for x in self.search_json(i, kv):
-                    yield x
+            for node_value in node:
+                for value in self.search_json(node_value, src_json):
+                    yield value
         elif isinstance(node, dict):
-            if kv in node:
-                yield node[kv]
-            for j in node.values():
-                for x in self.search_json(j, kv):
-                    yield x
+            if src_json in node:
+                yield node[src_json]
+            for node_value in node.values():
+                for value in self.search_json(node_value, src_json):
+                    yield value
 
-    def details_from_JSON(self, src_json, search_json, jobflag):
+    def details_from_json(self,
+                          src_json,
+                          search_json,
+                          jobflag):
         """
-        Returns Details from JSON by giving source DICT & search DICT (items needs to be fetched) as a list
+        Returns Details from JSON by giving source DICT
+        & search DICT (items needs to be fetched) as a list
         :param name: Source JSON src_json ``dict``
         :param name: Search JSON search_json ``dict``
         :param name: Determine source DICT is JOB / Build ``bool``
         :returns: INFO list info_list ``list``
 
         Example::
-            >>> details_from_JSON(src_json, search_json, true):
+            >>> details_from_json(src_json, search_json, true):
         """
         info_list = []
         for name, item in search_json.items():
-            if type(item) is list:
-                if len(list(self.search_json(src_json, item[0]))) != 0:
+            if isinstance(item, (list)):
+                if list(self.search_json(src_json, item[0])):
                     if jobflag:
                         info_list.append([name, list(self.search_json(src_json[item[0]], item[1]))])
                     else:
                         search_list = list(self.search_json(src_json[item[0]], item[1]))
-                        if len(search_list):
+                        if search_list:
                             info_list.append([name, search_list[0]])
             else:
-                if len(list(self.search_json(src_json, item))) != 0:
+                if list(self.search_json(src_json, item)):
                     info_list.append([name, src_json[item]])
         return info_list
-
-##################################################################################################################################
 
     # jxcore - Job functions
     def _list_all_jobs(self):
@@ -205,18 +213,20 @@ class PyJenkins(CtxCore):
             >>> _list_all_jobs()
         """
         jobs_list = []
-        jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
+        try:
+            jobs = self.server.get_all_jobs(folder_depth=None,
+                                            folder_depth_per_request=50)
+        except ConnectionError:
+            print("ConnectionError")
         try:
             for job_item in jobs:
                 if job_item["_class"] not in self.non_jobs_list:
                     jobs_list.append([job_item["fullname"], job_item["url"]])
         except KeyError:
             raise KeyError("Key not found")
-        except Exception as exp:
-            print(exp)
         return jobs_list
 
-    def list_all_jobs(self, count = False):
+    def list_all_jobs(self, count=False):
         """
         Display all jobs in Jenkins Context in a table
         :param name: Count count ``bool``
@@ -290,16 +300,19 @@ class PyJenkins(CtxCore):
 
     # jxcore - genrate report
     def genrate_report(self, report, json):
-        f = open("report.html", "w")
+        """
+        Generate HTML Report
+        """
+        report_file = open("report.html", "w")
         if json:
-            html_report = json2html.convert(json = report)
-            f.write(html_report)
-            f.close()
+            html_report = json2html.convert(json=report)
+            report_file.write(html_report)
+            report_file.close()
             print("Detail Job Report \"%s/report.html\" generated sucessfully" % self.cwd)
         else:
             html_report = tabulate(report, headers=['Job', 'Details'], tablefmt='orgtbl')
-            f.write(html_report)
-            f.close()
+            report_file.write(html_report)
+            report_file.close()
             print("Detail Job Report \"%s/report.html\" generated sucessfully" % self.cwd)
 
     # jxcore - job info
@@ -312,10 +325,10 @@ class PyJenkins(CtxCore):
             >> _job_info(job_name)
         """
         job_json = self.server.get_job_info(job_name)
-        job_info_list = self.details_from_JSON(job_json, self.JOB_DETAILS, jobflag=True)
+        job_info_list = self.details_from_json(job_json, self.JOB_DETAILS, jobflag=True)
         return job_info_list
 
-    def job_info(self, job_name, debug=False, report=False):
+    def job_info(self, job_name, debug=False, report=False):  # pylint: disable=unused-argument
         """
         Display needed Job info in a table
         :param name: Job name job_name ``str``
@@ -325,17 +338,17 @@ class PyJenkins(CtxCore):
         Example::
             >>> job_info(job_name)
         """
-        self.display_table(self._job_info(job_name), ["Job Data","Detail"])
+        self.display_table(self._job_info(job_name), ["Job Data", "Detail"])
 
     def _build_info(self, job_name, build_no):
         build_json = self.server.get_build_info(job_name, build_no)
-        build_info_list = self.details_from_JSON(build_json, self.BUILD_DETAILS, jobflag=False)
+        build_info_list = self.details_from_json(build_json, self.BUILD_DETAILS, jobflag=False)
         return build_info_list
     def build_info(self, job_name, build_no):
         """
         Build Info
         """
-        self.display_table(self._build_info(job_name, build_no),["Build Data","Detail"])
+        self.display_table(self._build_info(job_name, build_no), ["Build Data", "Detail"])
 
     def job_build(self, job_name):
         """

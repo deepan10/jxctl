@@ -9,10 +9,6 @@ matrix:
     - python: "3.7-dev"
       env: TOXENV=py37
 
-cache:
-    directories:
-     - .tox/
-
 addons:
   sonarcloud:
     organization: "myprojects"

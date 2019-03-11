@@ -6,8 +6,6 @@ matrix:
   include:
     - python: "3.6"
       env: TOXENV=py36
-    - python: "3.7-dev"
-      env: TOXENV=py37
 
 addons:
   sonarcloud:
@@ -16,17 +14,19 @@ addons:
       secure: $SONAR_TOKEN
 
 install:
-  - sudo pip install tox
-  - sudo pip install -r requirements.txt
-  - sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+  - python -V
+  - which python
+  - pip install tox
+  - pip install -r requirements.txt
+  - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
 
 before_script:
-  - sudo unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
+  - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
   - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
-  - sudo pip list
+  - pip list
 
 script:
-  - sudo tox
+  - tox
 
 after_success:
   - sonar-scanner

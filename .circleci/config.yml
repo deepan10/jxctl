@@ -53,7 +53,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            tox -e py36
+            tox -e py37
 
 workflows:
   version: 2

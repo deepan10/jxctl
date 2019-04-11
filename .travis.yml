@@ -1,13 +1,12 @@
 os:
   - linux
-  
+
 language: python
-matrix:
-  include:
-    - python: "3.6"
-      env: TOXENV=py36
-    - python: "3.5"
-      env: TOXENV=py35
+
+stages:
+  - Test
+  - name: Deploy
+    if: branch = master
 
 addons:
   sonarcloud:
@@ -15,23 +14,36 @@ addons:
     token:
       secure: $SONAR_TOKEN
 
-install:
-  - python -V
-  - which python
-  - pip install tox
-  - pip install -r requirements.txt
-  - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+jobs:
+  include:
+    - stage: Test
+      python: 3.6
+      env:
+        - TOXENV=py36
 
-before_script:
-  - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
-  - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
-  - pip list
+      install:
+        - python -V
+        - which python
+        - pip install tox
+        - pip install -r requirements.txt
+        - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
 
-script:
-  - tox
+      before_script:
+        - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
+        - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
+        - pip list
 
-after_success:
-  - sonar-scanner
+      script:
+        - tox
 
+      after_success:
+        - sonar-scanner
+    - stage: Deploy
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        on:
+          tags: true
 notifications:
   slack: deepan10:g0F1yGouO4Sj4034QN125LD0

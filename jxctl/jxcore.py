@@ -14,7 +14,7 @@ try:
 except ImportError:
     from .ctxcore import CtxCore
 
-class PyJenkins(CtxCore):
+class JxCore(CtxCore):
     """
     jxtl core Jenkins operation methods
     """
@@ -78,13 +78,14 @@ class PyJenkins(CtxCore):
         """
         Initialize the Jenkins Context and CtxCore to access the API
         """
-        super().__init__()
-        if self.validate_context():
+        ctx_core = CtxCore()
+        if ctx_core.validate_context():
             try:
-                self.server = jenkins.Jenkins(self.ctx_url,
-                                              username=self.ctx_user,
-                                              password=self.ctx_token)
-                self.URL = self.ctx_url  # pylint: disable=invalid-name
+                self.server = jenkins.Jenkins(ctx_core.ctx_url,
+                                              username=ctx_core.ctx_user,
+                                              password=ctx_core.ctx_token)
+                # pylint: disable=invalid-name
+                self.URL = ctx_core.ctx_url
                 self.cwd = os.getcwd()
             except jenkins.JenkinsException as server_error:
                 print("Init Context Core", server_error)
@@ -124,18 +125,6 @@ class PyJenkins(CtxCore):
             print(tabulate(display_list, headers=display_header, tablefmt='orgtbl'))
         else:
             print(tabulate([[len(display_list)]], headers=display_header, tablefmt='orgtbl'))
-
-    @staticmethod
-    def json2list(json):
-        """
-        Convert the JSON to LIST
-        :param name: JSON Object json ``dist``
-        :returns: list of the given json ``list``
-
-        Example::
-            >>> self.json2list(json_object)
-        """
-        return [[key, value] for key, value in json.items()]
 
     def key_from_value(self, search_value):
         """
@@ -204,28 +193,6 @@ class PyJenkins(CtxCore):
                     info_list.append([name, src_json[item]])
         return info_list
 
-    # jxcore - Job functions
-    def _list_all_jobs(self):
-        """
-        Returns all jobs in Jenkins context as a readable list
-        :returns: Jobs list jobs_list ``list``
-        Example::
-            >>> _list_all_jobs()
-        """
-        jobs_list = []
-        try:
-            jobs = self.server.get_all_jobs(folder_depth=None,
-                                            folder_depth_per_request=50)
-        except ConnectionError:
-            print("ConnectionError")
-        try:
-            for job_item in jobs:
-                if job_item["_class"] not in self.non_jobs_list:
-                    jobs_list.append([job_item["fullname"], job_item["url"]])
-        except KeyError:
-            raise KeyError("Key not found")
-        return jobs_list
-
     def list_all_jobs(self, count=False):
         """
         Display all jobs in Jenkins Context in a table
@@ -234,27 +201,20 @@ class PyJenkins(CtxCore):
             >>> list_all_jobs()
             >>> list_all_jobs(count=True)
         """
-        jobs_list = self._list_all_jobs()
+        jobs_list = []
+        jobs = self.server.get_all_jobs(folder_depth=None,
+                                        folder_depth_per_request=50)
+        try:
+            for job_item in jobs:
+                if job_item["_class"] not in self.non_jobs_list:
+                    jobs_list.append([job_item["fullname"], job_item["url"]])
+        except KeyError:
+            raise KeyError("Key not found")
+
         if not count:
             self.display_table(jobs_list, ['Name', 'URL'])
         else:
             self.display_table(jobs_list, ['No. of Jobs'], count_flag=True)
-
-    def _list_jobs(self, option_list):
-        """
-        Returns a specific group of jobs in a list
-        :param name: Job class list option_list ``list``
-        :returns: Searched jobs in a list jobs_list ``list``
-        Example::
-            >>> _list_jobs(option_list)
-        """
-        jobs_list = []
-        jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
-        for item in option_list:
-            for job_item in jobs:
-                if job_item["_class"] in self.option_dist[item]:
-                    jobs_list.append([job_item["fullname"], job_item["url"]])
-        return jobs_list
 
     def list_jobs(self, option_list, count=False):
         """
@@ -265,24 +225,20 @@ class PyJenkins(CtxCore):
             >>> list_jobs(option_list)
             >>> list_jobs(option_list, count=True)
         """
-        jobs_list = self._list_jobs(option_list)
+        jobs_list = []
+        jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
+        try:
+            for item in option_list:
+                for job_item in jobs:
+                    if job_item["_class"] in self.option_dist[item]:
+                        jobs_list.append([job_item["fullname"], job_item["url"]])
+        except KeyError:
+            raise KeyError("Key not found")
+        
         if not count:
             self.display_table(jobs_list, ['Name', 'URL'])
         else:
             self.display_table(jobs_list, ['No. of Jobs'], count_flag=True)
-
-    # jxcore - Plugin functions
-    def _list_all_plugins(self):
-        """
-        Returns all plugins in Jenkins context as a list
-        Example::
-            >>> _list_all_plugins()
-        """
-        plugins = self.server.get_plugins_info()
-        plugins_list = []
-        for item in plugins:
-            plugins_list.append([item["longName"], item["shortName"], item["version"]])
-        return plugins_list
 
     def list_all_plugins(self, count=False):
         """
@@ -292,7 +248,11 @@ class PyJenkins(CtxCore):
             >>> list_all_plugins()
             >>> list_all_plugins(count=True)
         """
-        plugins_list = self._list_all_plugins()
+        plugins = self.server.get_plugins_info()
+        plugins_list = []
+        for item in plugins:
+            plugins_list.append([item["longName"], item["shortName"], item["version"]])
+
         if not count:
             self.display_table(plugins_list, ['Plugin Name', 'Short Name', 'Version'])
         else:
@@ -315,20 +275,8 @@ class PyJenkins(CtxCore):
             report_file.close()
             print("Detail Job Report \"%s/report.html\" generated sucessfully" % self.cwd)
 
-    # jxcore - job info
-    def _job_info(self, job_name):
-        """
-        Returns the needed Job infomation as a list
-        :param name: Job name job_name ``str``
-        :returns: Job info list job_info_list ``list``
-        Example::
-            >> _job_info(job_name)
-        """
-        job_json = self.server.get_job_info(job_name)
-        job_info_list = self.details_from_json(job_json, self.JOB_DETAILS, jobflag=True)
-        return job_info_list
-
-    def job_info(self, job_name, debug=False, report=False):  # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    def job_info(self, job_name, debug=False, report=False):
         """
         Display needed Job info in a table
         :param name: Job name job_name ``str``
@@ -338,17 +286,17 @@ class PyJenkins(CtxCore):
         Example::
             >>> job_info(job_name)
         """
-        self.display_table(self._job_info(job_name), ["Job Data", "Detail"])
+        job_json = self.server.get_job_info(job_name)
+        job_info_list = self.details_from_json(job_json, self.JOB_DETAILS, jobflag=True)
+        self.display_table(job_info_list, ["Job Data", "Detail"])
 
-    def _build_info(self, job_name, build_no):
-        build_json = self.server.get_build_info(job_name, build_no)
-        build_info_list = self.details_from_json(build_json, self.BUILD_DETAILS, jobflag=False)
-        return build_info_list
     def build_info(self, job_name, build_no):
         """
         Build Info
         """
-        self.display_table(self._build_info(job_name, build_no), ["Build Data", "Detail"])
+        build_json = self.server.get_build_info(job_name, build_no)
+        build_info_list = self.details_from_json(build_json, self.BUILD_DETAILS, jobflag=False)
+        self.display_table(build_info_list, ["Build Data", "Detail"])
 
     def job_build(self, job_name):
         """

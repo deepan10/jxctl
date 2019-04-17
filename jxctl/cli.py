@@ -9,10 +9,10 @@ import click
 from pyfiglet import Figlet
 
 try:
-    from jxcore import PyJenkins
+    from jxcore import JxCore
     from ctxcore import CtxCore
 except ImportError:
-    from .jxcore import PyJenkins
+    from .jxcore import JxCore
     from .ctxcore import CtxCore
 
 # Globals
@@ -96,7 +96,7 @@ def info():
     """
     figlet = Figlet(font='smslant')
     click.echo(figlet.renderText('jxctl'))
-    PyJenkins().info()
+    JxCore().info()
 
 #jxctl - get jobs
 @get.command()
@@ -162,16 +162,16 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
                 for item in option_dist:
                     if option_dist[item]:
                         option_list.append(item)
-                PyJenkins().list_jobs(option_list, count=True)
+                JxCore().list_jobs(option_list, count=True)
             else:
-                PyJenkins().list_all_jobs(count=True)
+                JxCore().list_all_jobs(count=True)
         elif all:
-            PyJenkins().list_all_jobs()
+            JxCore().list_all_jobs()
         else:
             for item in option_dist:
                 if option_dist[item]:
                     option_list.append(item)
-            PyJenkins().list_jobs(option_list)
+            JxCore().list_jobs(option_list)
     else:
         print_help(ctx, None, value=True)
 
@@ -187,11 +187,11 @@ def job(jobname, debug, build, report, buildinfo):
     Job level Operations
     """
     if buildinfo:
-        PyJenkins().build_info(jobname, buildinfo)
+        JxCore().build_info(jobname, buildinfo)
     elif build:
-        PyJenkins().job_build(jobname)
+        JxCore().job_build(jobname)
     else:
-        PyJenkins().job_info(jobname, debug, report)
+        JxCore().job_info(jobname, debug, report)
 
 @get.command()
 @click.option('--count', '-c', is_flag=True, help='Returns the number of plugin installed')
@@ -200,9 +200,9 @@ def plugins(count):
     List all installed plugins of Jenkins Context
     """
     if count:
-        PyJenkins().list_all_plugins(count=True)
+        JxCore().list_all_plugins(count=True)
     else:
-        PyJenkins().list_all_plugins()
+        JxCore().list_all_plugins()
 
 if __name__ == '__main__':
     main()

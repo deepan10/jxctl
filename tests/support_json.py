@@ -1,4 +1,4 @@
-class TestCasesInput():
+class SupportJSON():
     def __init__(self):
         self.all_jobs_json = [{
             '_class': 'hudson.maven.MavenModuleSet',

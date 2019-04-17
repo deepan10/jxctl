@@ -34,7 +34,7 @@ class CtxCore():
         config_file = user_home+"/.jxctl/config"
         if not os.path.isfile(config_file):
             with open(config_file, 'w') as yaml_file:
-                yaml.dump(yaml.load(json.dumps(default_config_file)),
+                yaml.dump(yaml.load(json.dumps(default_config_file), Loader=yaml.SafeLoader),
                           yaml_file,
                           default_flow_style=False)
 
@@ -44,7 +44,7 @@ class CtxCore():
         """
         try:
             cfile = open(self.CONTEXT_FILE)
-            context = yaml.load(cfile)
+            context = yaml.load(cfile, Loader=yaml.SafeLoader)
             cfile.close()
             return str(context["context"]["user"]), str(context["context"]["token"]), \
                     str(context["context"]["url"]), str(context["context"]["name"])
@@ -84,7 +84,6 @@ class CtxCore():
                 token: %s
                 name: %s
             """ % (self.ctx_name, self.ctx_url, self.ctx_user, self.ctx_token, self.ctx_name)
-        #print(yaml.dump(yaml.load(context_file), default_flow_style=False))
         with open(self.CONTEXT_FILE, 'w') as ctx_file:
-            yaml.dump(yaml.load(context_file), ctx_file, default_flow_style=False)
+            yaml.dump(yaml.load(context_file, Loader=yaml.SafeLoader), ctx_file, default_flow_style=False)
         print("jxctl - context updated")

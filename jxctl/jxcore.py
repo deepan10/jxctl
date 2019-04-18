@@ -14,7 +14,7 @@ try:
 except ImportError:
     from .ctxcore import CtxCore
 
-class JxCore(CtxCore):
+class JxCore():
     """
     jxtl core Jenkins operation methods
     """
@@ -234,7 +234,7 @@ class JxCore(CtxCore):
                         jobs_list.append([job_item["fullname"], job_item["url"]])
         except KeyError:
             raise KeyError("Key not found")
-        
+
         if not count:
             self.display_table(jobs_list, ['Name', 'URL'])
         else:

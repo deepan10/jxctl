@@ -1,5 +1,5 @@
 import setuptools
-from jxctl.jxctl import __author__, __email__, __version__
+from jxctl import __author__, __email__, __version__
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -30,7 +30,7 @@ setuptools.setup(
     ],
     entry_points={
           'console_scripts': [
-              'jxctl = jxctl.jxctl:start'
+              'jxctl = jxctl.cli:start'
           ]
     },
 )

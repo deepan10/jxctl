@@ -5,8 +5,8 @@ language: python
 
 stages:
   - Test
-  - name: Deploy
-    if: branch = master
+  - Sonar
+  - Coverage
 
 addons:
   sonarcloud:
@@ -18,32 +18,41 @@ jobs:
   include:
     - stage: Test
       python: 3.6
-      env:
-        - TOXENV=py36
 
       install:
-        - python -V
-        - which python
-        - pip install tox
         - pip install -r requirements.txt
-        - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
 
+      script:
+        - pytest -v
+    
+    - stage: Test
+      python: 3.5
+
+      install:
+        - pip install -r requirements.txt
+
+      script:
+        - pytest -v
+    
+    - stage: Sonar
+      python: 3.6
+      install:
+        - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+      
       before_script:
         - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
         - export PATH=/opt/sonar-scanner-cli-3.2.0.1227-linux/bin:$PATH
-        - pip list
-
+      
       script:
-        - tox
-
+        - pytest -v
+      
       after_success:
         - sonar-scanner
-    - stage: Deploy
-      deploy:
-        provider: releases
-        api_key: $GITHUB_OAUTH_TOKEN
-        skip_cleanup: true
-        on:
-          tags: true
+      
+    - stage: Coverage
+      script:
+        - coverage run --source jxctl setup.py test
+        - codecov
+    
 notifications:
   slack: deepan10:g0F1yGouO4Sj4034QN125LD0

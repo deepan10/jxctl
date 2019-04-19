@@ -30,7 +30,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_jobs()
         expected_jobs_list = []
         expected_table_header = ['Name', 'URL']
-        mock_display.assert_called_with(expected_jobs_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_jobs_list, expected_table_header)
 
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -44,7 +44,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_jobs()
         expected_jobs_list = [['maven-test-job', 'http://localhost:8080/job/maven-test-job/'], ['test-freestyle-job', 'http://localhost:8080/job/test-freestyle-job/'], ['pipeline-test-job', 'http://localhost:8080/job/pipeline-test-job/'], ['test-folder/test-sub-folder/subfolder-freestyle-job', 'http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/']]
         expected_table_header = ['Name', 'URL']
-        mock_display.assert_called_with(expected_jobs_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_jobs_list, expected_table_header)
     
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -58,7 +58,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_jobs(count=True)
         expected_jobs_list = [['maven-test-job', 'http://localhost:8080/job/maven-test-job/'], ['test-freestyle-job', 'http://localhost:8080/job/test-freestyle-job/'], ['pipeline-test-job', 'http://localhost:8080/job/pipeline-test-job/'], ['test-folder/test-sub-folder/subfolder-freestyle-job', 'http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/']]
         expected_table_header = ['No. of Jobs']
-        mock_display.assert_called_with(expected_jobs_list, expected_table_header, count_flag=True, any_order=True)
+        mock_display.assert_called_with(expected_jobs_list, expected_table_header, count_flag=True)
     
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -72,7 +72,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_jobs(["pipeline"])
         expected_jobs_list = [['pipeline-test-job', 'http://localhost:8080/job/pipeline-test-job/']]
         expected_table_header = ['Name', 'URL']
-        mock_display.assert_called_with(expected_jobs_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_jobs_list, expected_table_header)
     
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -86,7 +86,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_jobs(["pipeline", "maven"])
         expected_jobs_list = [['pipeline-test-job', 'http://localhost:8080/job/pipeline-test-job/'], ['maven-test-job', 'http://localhost:8080/job/maven-test-job/']]
         expected_table_header = ['Name', 'URL']
-        mock_display.assert_called_with(expected_jobs_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_jobs_list, expected_table_header)
 
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -100,7 +100,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_plugins()
         expected_plugin_list = SupportJSON().plugins_list_return
         expected_table_header = ['Plugin Name', 'Short Name', 'Version']
-        mock_display.assert_called_with(expected_plugin_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_plugin_list, expected_table_header)
 
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -114,7 +114,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_plugins(count=True)
         expected_plugin_list = SupportJSON().plugins_list_return
         expected_table_header = ['No. of Plugins']
-        mock_display.assert_called_with(expected_plugin_list, expected_table_header, count_flag+True, any_order=True)
+        mock_display.assert_called_with(expected_plugin_list, expected_table_header, True)
 
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -128,7 +128,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.job_info("test-pipeline-job")
         expected_plugin_list = SupportJSON().job_info_return
         expected_table_header = ['Job Data', 'Detail']
-        mock_display.assert_called_with(expected_plugin_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_plugin_list, expected_table_header)
     
     @mock.patch('jxctl.jxcore.JxCore.display_table')
     @mock.patch('jxctl.ctxcore.CtxCore')
@@ -142,4 +142,4 @@ class JxCoreTest(unittest.TestCase):
         jxcore.build_info("test-pipeline-job", "10")
         expected_plugin_list = SupportJSON().build_info_return
         expected_table_header = ["Build Data", "Detail"]
-        mock_display.assert_called_with(expected_plugin_list, expected_table_header, any_order=True)
+        mock_display.assert_called_with(expected_plugin_list, expected_table_header)

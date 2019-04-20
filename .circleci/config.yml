@@ -7,129 +7,129 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      unittest_py36:
-        docker:
-          - image: circleci/python:3.6.1
-        working_directory: ~/repo
-        steps:
-          - checkout
-          - restore_cache:
-              keys:
-              - v1-dependencies-{{ checksum "requirements.txt" }}
-              - v1-dependencies-
-          - run:
-              name: Install dependencies
-              command: |
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-          - save_cache:
-              paths:
-                - ./venv
-              key: v1-dependencies-{{ checksum "requirements.txt" }}
-          - run:
-              name: Run Unittest
-              command: |
-                . venv/bin/activate
-                stestr run
-      unittest_py37:
-        docker:
-          - image: circleci/python:3.7
-        working_directory: ~/repo
-        steps:
-          - checkout
-          - restore_cache:
-              keys:
-              - v1-dependencies-{{ checksum "requirements.txt" }}
-              - v1-dependencies-
-          - run:
-              name: Install dependencies
-              command: |
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-          - save_cache:
-              paths:
-                - ./venv
-              key: v1-dependencies-{{ checksum "requirements.txt" }}
-          - run:
-              name: Run Unittest
-              command: |
-                . venv/bin/activate
-                stestr run
+      - unittest_py36:
+          docker:
+            - image: circleci/python:3.6.1
+          working_directory: ~/repo
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "requirements.txt" }}
+                - v1-dependencies-
+            - run:
+                name: Install dependencies
+                command: |
+                  python3 -m venv venv
+                  . venv/bin/activate
+                  pip install -r requirements.txt
+            - save_cache:
+                paths:
+                  - ./venv
+                key: v1-dependencies-{{ checksum "requirements.txt" }}
+            - run:
+                name: Run Unittest
+                command: |
+                  . venv/bin/activate
+                  stestr run
+      - unittest_py37:
+          docker:
+            - image: circleci/python:3.7
+          working_directory: ~/repo
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "requirements.txt" }}
+                - v1-dependencies-
+            - run:
+                name: Install dependencies
+                command: |
+                  python3 -m venv venv
+                  . venv/bin/activate
+                  pip install -r requirements.txt
+            - save_cache:
+                paths:
+                  - ./venv
+                key: v1-dependencies-{{ checksum "requirements.txt" }}
+            - run:
+                name: Run Unittest
+                command: |
+                  . venv/bin/activate
+                  stestr run
 
-      lint_check:
-        docker:
-          - image: circleci/python:3.7
-        working_directory: ~/repo
-        steps:
-          - checkout
-          - restore_cache:
-              keys:
-              - v1-dependencies-{{ checksum "requirements.txt" }}
-              - v1-dependencies-
-          - run:
-              name: install dependencies
-              command: |
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-          - save_cache:
-              paths:
-                - ./venv
-              key: v1-dependencies-{{ checksum "requirements.txt" }}
-          - run:
-              name: run tests
-              command: |
-                . venv/bin/activate
-                pylint jxctl
+      - lint_check:
+          docker:
+            - image: circleci/python:3.7
+          working_directory: ~/repo
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "requirements.txt" }}
+                - v1-dependencies-
+            - run:
+                name: install dependencies
+                command: |
+                  python3 -m venv venv
+                  . venv/bin/activate
+                  pip install -r requirements.txt
+            - save_cache:
+                paths:
+                  - ./venv
+                key: v1-dependencies-{{ checksum "requirements.txt" }}
+            - run:
+                name: run tests
+                command: |
+                  . venv/bin/activate
+                  pylint jxctl
       
-      pep8_check:
-        docker:
-          - image: circleci/python:3.7
-        working_directory: ~/repo
-        steps:
-          - checkout
-          - restore_cache:
-              keys:
-              - v1-dependencies-{{ checksum "requirements.txt" }}
-              - v1-dependencies-
-          - run:
-              name: install dependencies
-              command: |
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-          - save_cache:
-              paths:
-                - ./venv
-              key: v1-dependencies-{{ checksum "requirements.txt" }}
-          - run:
-              name: run tests
-              command: |
-                . venv/bin/activate
-                pycodestyle jxctl
+      - pep8_check:
+          docker:
+            - image: circleci/python:3.7
+          working_directory: ~/repo
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "requirements.txt" }}
+                - v1-dependencies-
+            - run:
+                name: install dependencies
+                command: |
+                  python3 -m venv venv
+                  . venv/bin/activate
+                  pip install -r requirements.txt
+            - save_cache:
+                paths:
+                  - ./venv
+                key: v1-dependencies-{{ checksum "requirements.txt" }}
+            - run:
+                name: run tests
+                command: |
+                  . venv/bin/activate
+                  pycodestyle jxctl
       
-      sonar_analysis:
-        requires:
-          - unittest_py36
-          - unittest_py37
-        docker:
-          - image: circleci/python:3.7
-        working_directory: ~/repo
-        steps:
-          - checkout
-          - restore_cache:
-              keys:
-              - v1-dependencies-{{ checksum "requirements.txt" }}
-              - v1-dependencies-
-          - run:
-              name: install dependencies
-              command: |
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install -r requirements.txt
-          - save_cache:
-              paths:
-                - ./venv
-              key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - sonar_analysis:
+          requires:
+            - unittest_py36
+            - unittest_py37
+          docker:
+            - image: circleci/python:3.7
+          working_directory: ~/repo
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "requirements.txt" }}
+                - v1-dependencies-
+            - run:
+                name: install dependencies
+                command: |
+                  python3 -m venv venv
+                  . venv/bin/activate
+                  pip install -r requirements.txt
+            - save_cache:
+                paths:
+                  - ./venv
+                key: v1-dependencies-{{ checksum "requirements.txt" }}

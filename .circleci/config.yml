@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  tox_py36:
+  unittest_py36:
     docker:
       - image: circleci/python:3.6.1
     working_directory: ~/repo
@@ -15,7 +15,7 @@ jobs:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           - v1-dependencies-
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -25,11 +25,37 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
-          name: run tests
+          name: Run Unittest
           command: |
             . venv/bin/activate
-            tox -e py36
-  tox_py37:
+            stestr run
+  unittest_py37:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: Run Unittest
+          command: |
+            . venv/bin/activate
+            stestr run
+
+  lint_check:
     docker:
       - image: circleci/python:3.7
     working_directory: ~/repo
@@ -53,11 +79,39 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            tox -e py37
+            pylint jxctl
+  
+  pep8_check:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            pycodestyle jxctl
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - tox_py36
-      - tox_py37
+      - unittest_py36
+      - unittest_py37
+      - lint_check
+      - pep8_check

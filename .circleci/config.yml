@@ -139,3 +139,4 @@ workflows:
       - unittest_py37
       - lint_check
       - pep8_check
+      - sonar_analysis

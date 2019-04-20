@@ -106,6 +106,30 @@ jobs:
           command: |
             . venv/bin/activate
             pycodestyle jxctl
+  
+  sonar_analysis:
+    requires:
+      - unittest_py36
+      - unittest_py37
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
 workflows:
   version: 2

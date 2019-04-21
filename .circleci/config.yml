@@ -170,6 +170,8 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+  hold:
+    type: approval
 
 workflows:
   version: 2
@@ -184,7 +186,6 @@ workflows:
             - unittest_py36
             - unittest_py37
       - package_and_deploy:
-          type: approval
           requires:
             - unittest_py36
             - unittest_py37

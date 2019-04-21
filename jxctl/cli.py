@@ -7,6 +7,7 @@ import click
 # sys.path.append("..")
 
 from pyfiglet import Figlet
+import jxctl
 
 try:
     from jxcore import JxCore
@@ -25,12 +26,14 @@ def print_help(ctx, param, value):  # pylint: disable=unused-argument
     click.echo(ctx.get_help())
     ctx.exit()
 
+
 @click.group()
 def main():
     """
     Jenkins cli interface for Jenkins Instance
     """
     pass  # pylint: disable=unnecessary-pass
+
 
 @main.command()
 def version():
@@ -41,13 +44,14 @@ def version():
     click.echo(figlet.renderText('jxctl'))
     click.echo('A cli interface for your Jenkins Instance')
     click.echo("=========================================")
-    click.echo('jxctl version : '+ __version__)
-    click.echo('Python version : '+ platform.python_version())
-    click.echo('OS Version: '+ platform.system() + ' - ' + platform.version())
-    click.echo("Author: "+ __author__)
-    click.echo("Email: "+ __email__)
-    click.echo("PyPI: "+ __pypi__)
+    click.echo('jxctl version : ' + jxctl.__version__)
+    click.echo('Python version : ' + platform.python_version())
+    click.echo('OS Version: ' + platform.system() + ' - ' + platform.version())
+    click.echo("Author: " + jxctl.__author__)
+    click.echo("Email: " + jxctl.__email__)
+    click.echo("PyPI: " + jxctl.__pypi__)
     click.echo("=========================================")
+
 
 @main.group()
 def context():
@@ -56,6 +60,7 @@ def context():
     """
     pass  # pylint: disable=unnecessary-pass
 
+
 @main.group()
 def get():
     """
@@ -63,7 +68,7 @@ def get():
     """
     pass  # pylint: disable=unnecessary-pass
 
-#jxctl - context group
+
 @context.command()
 @click.option('--url',
               type=str,
@@ -84,6 +89,7 @@ def set(url, user, token, name):  # pylint: disable=redefined-builtin
     """
     CtxCore().set_context(url, user, token, name)
 
+
 @context.command()
 def info():
     """
@@ -93,14 +99,16 @@ def info():
     click.echo(figlet.renderText('jxctl'))
     JxCore().info()
 
-#jxctl - get jobs
+
 @get.command()
 @click.option('--count', '-c',
               is_flag=True,
               help='Returns number of jobs')
 @click.option('--all',
               is_flag=True,
-              help='List all(maven, freestly, pipeline, multi-branch, matrix and org) jobs')
+              help='List all(maven, \
+                freestly, pipeline, \
+                multi-branch, matrix and org) jobs')
 @click.option('--maven',
               is_flag=True,
               help='List all maven style jobs')
@@ -142,14 +150,14 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
     """
     List Jenkins Context jobs
     """
-    option_dist = {"all":all,
-                   "maven":maven,
-                   "freestyle":freestyle,
-                   "pipeline":pipeline,
-                   "multi-branch":multi_branch,
-                   "matrix":matrix,
-                   "folders":folders,
-                   "org":org}
+    option_dist = {"all": all,
+                   "maven": maven,
+                   "freestyle": freestyle,
+                   "pipeline": pipeline,
+                   "multi-branch": multi_branch,
+                   "matrix": matrix,
+                   "folders": folders,
+                   "org": org}
     option_list = []
     if any(option_dist.values()):
         if count:
@@ -170,7 +178,7 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
     else:
         print_help(ctx, None, value=True)
 
-#jxctl - get job
+
 @main.command()
 @click.argument('jobName')
 @click.option('--debug', is_flag=True, help='Returns complete job info')
@@ -188,8 +196,11 @@ def job(jobname, debug, build, report, buildinfo):
     else:
         JxCore().job_info(jobname, debug, report)
 
+
 @get.command()
-@click.option('--count', '-c', is_flag=True, help='Returns the number of plugin installed')
+@click.option('--count', '-c',
+              is_flag=True,
+              help='Returns the number of plugin installed')
 def plugins(count):
     """
     List all installed plugins of Jenkins Context
@@ -199,8 +210,10 @@ def plugins(count):
     else:
         JxCore().list_all_plugins()
 
+
 if __name__ == '__main__':
     main()
+
 
 def start():
     """

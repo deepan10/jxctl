@@ -7,12 +7,11 @@ import requests
 from tabulate import tabulate
 from json2html import json2html
 
-#sys.path.append("..")
-
 try:
     from ctxcore import CtxCore
 except ImportError:
     from .ctxcore import CtxCore
+
 
 class JxCore():
     """
@@ -25,13 +24,13 @@ class JxCore():
     cwd = ''
 
     option_dist = {
-        "freestyle" : "hudson.model.FreeStyleProject",
-        "maven" : "hudson.maven.MavenModuleSet",
-        "pipeline" : "org.jenkinsci.plugins.workflow.job.WorkflowJob",
-        "multi-branch" : "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",
-        "folders" : "com.cloudbees.hudson.plugins.folder.Folder",
-        "matrix" : "hudson.matrix.MatrixProject",
-        "org" : "jenkins.branch.OrganizationFolder"
+        "freestyle": "hudson.model.FreeStyleProject",
+        "maven": "hudson.maven.MavenModuleSet",
+        "pipeline": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+        "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",  # noqa  # pylint: disable=line-too-long
+        "folders": "com.cloudbees.hudson.plugins.folder.Folder",
+        "matrix": "hudson.matrix.MatrixProject",
+        "org": "jenkins.branch.OrganizationFolder"
     }
     non_jobs_list = [
         "com.cloudbees.hudson.plugins.folder.Folder",
@@ -40,38 +39,38 @@ class JxCore():
         ]
 
     build_info_dict = {
-        "_class" : "Style",
-        "shortDescription" : "Started By",
-        "url" : "Job URL",
-        "remoteUrls" : "SCM URL",
-        "commitId" : "Commit ID",
-        "fullDisplayName" : "Display Name",
-        "result" : "Status",
-        "timestamp" : "Time"
+        "_class": "Style",
+        "shortDescription": "Started By",
+        "url": "Job URL",
+        "remoteUrls": "SCM URL",
+        "commitId": "Commit ID",
+        "fullDisplayName": "Display Name",
+        "result": "Status",
+        "timestamp": "Time"
     }
 
     BUILD_DETAILS = {
-        "Job Type" : "_class",
-        "Started By" : ["actions", "shortDescription"],
-        "URL" : "url",
-        "Commit Id" : ['actions', "SHA1"],
-        "Job Name" : ['actions', "name"],
-        "SCM URL" : ["actions", "remoteUrls"],
-        "Comment" : ["changeSets", "comment"],
-        "Name" : "fullDisplayName",
-        "Build Status" : "result",
-        "Time" : "timestamp"
+        "Job Type": "_class",
+        "Started By": ["actions", "shortDescription"],
+        "URL": "url",
+        "Commit Id": ['actions', "SHA1"],
+        "Job Name": ['actions', "name"],
+        "SCM URL": ["actions", "remoteUrls"],
+        "Comment": ["changeSets", "comment"],
+        "Name": "fullDisplayName",
+        "Build Status": "result",
+        "Time": "timestamp"
     }
 
     JOB_DETAILS = {
-        "Name" : "fullName",
-        "URL" : "url",
-        "Type" : "_class",
-        "Last Completed Build" : ["lastCompletedBuild", "number"],
-        "Last Sucessful Build" : ["lastSuccessfulBuild", "number"],
-        "Last Build" : ["lastBuild", "number"],
-        "SCM Type" : ["scm", "_class"],
-        "Builds" : ["builds", "number"]
+        "Name": "fullName",
+        "URL": "url",
+        "Type": "_class",
+        "Last Completed Build": ["lastCompletedBuild", "number"],
+        "Last Sucessful Build": ["lastSuccessfulBuild", "number"],
+        "Last Build": ["lastBuild", "number"],
+        "SCM Type": ["scm", "_class"],
+        "Builds": ["builds", "number"]
     }
 
     def __init__(self):
@@ -103,16 +102,23 @@ class JxCore():
         try:
             self.username = self.server.get_whoami()["fullName"]
             self.version = self.server.get_version()
-            info_list = [["URL", self.URL], ["Version", self.version], ["User", self.username]]
-            print(tabulate(info_list, headers=['Jenkins', 'Description'], tablefmt='orgtbl'))
+            info_list = [
+                ["URL", self.URL],
+                ["Version", self.version],
+                ["User", self.username]]
+            print(tabulate(info_list,
+                           headers=['Jenkins', 'Description'],
+                           tablefmt='orgtbl'))
         except requests.exceptions.ConnectionError:
-            print("Connection Error... Make sure your Jenkins context is up and running")
+            print("Connection Error... \
+                   Make sure your Jenkins context is up and running")
 
     @staticmethod
     def display_table(display_list, display_header, count_flag=False):
         """
         Display the result in list to Table format.
-        Having the special param count_flag, If true will display the count of the list in table.
+        Having the special param count_flag,
+        If true will display the count of the list in table.
         :param name: OutputList display_list ``list``
         :param name: HeaderList display_header ``list``
         :param name: Count count_flag ``bool``
@@ -122,9 +128,13 @@ class JxCore():
             >>> self.display_table(list_item, list_header, count_flag=True)
         """
         if not count_flag:
-            print(tabulate(display_list, headers=display_header, tablefmt='orgtbl'))
+            print(tabulate(display_list,
+                           headers=display_header,
+                           tablefmt='orgtbl'))
         else:
-            print(tabulate([[len(display_list)]], headers=display_header, tablefmt='orgtbl'))
+            print(tabulate([[len(display_list)]],
+                           headers=display_header,
+                           tablefmt='orgtbl'))
 
     def key_from_value(self, search_value):
         """
@@ -183,9 +193,14 @@ class JxCore():
             if isinstance(item, (list)):
                 if list(self.search_json(src_json, item[0])):
                     if jobflag:
-                        info_list.append([name, list(self.search_json(src_json[item[0]], item[1]))])
+                        info_list.append([name,
+                                          list(self.search_json(
+                                              src_json[item[0]],
+                                              item[1])
+                                              )])
                     else:
-                        search_list = list(self.search_json(src_json[item[0]], item[1]))
+                        search_list = list(self.search_json(src_json[item[0]],
+                                                            item[1]))
                         if search_list:
                             info_list.append([name, search_list[0]])
             else:
@@ -226,12 +241,14 @@ class JxCore():
             >>> list_jobs(option_list, count=True)
         """
         jobs_list = []
-        jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
+        jobs = self.server.get_all_jobs(folder_depth=None,
+                                        folder_depth_per_request=50)
         try:
             for item in option_list:
                 for job_item in jobs:
                     if job_item["_class"] in self.option_dist[item]:
-                        jobs_list.append([job_item["fullname"], job_item["url"]])
+                        jobs_list.append([job_item["fullname"],
+                                          job_item["url"]])
         except KeyError:
             raise KeyError("Key not found")
 
@@ -251,10 +268,13 @@ class JxCore():
         plugins = self.server.get_plugins_info()
         plugins_list = []
         for item in plugins:
-            plugins_list.append([item["longName"], item["shortName"], item["version"]])
+            plugins_list.append([item["longName"],
+                                 item["shortName"],
+                                 item["version"]])
 
         if not count:
-            self.display_table(plugins_list, ['Plugin Name', 'Short Name', 'Version'])
+            self.display_table(plugins_list,
+                               ['Plugin Name', 'Short Name', 'Version'])
         else:
             self.display_table(plugins_list, ['No. of Plugins'], True)
 
@@ -268,12 +288,18 @@ class JxCore():
             html_report = json2html.convert(json=report)
             report_file.write(html_report)
             report_file.close()
-            print("Detail Job Report \"%s/report.html\" generated sucessfully" % self.cwd)
+            print("Detail Job Report \"%s \
+                  /report.html\" generated \
+                  sucessfully" % self.cwd)
         else:
-            html_report = tabulate(report, headers=['Job', 'Details'], tablefmt='orgtbl')
+            html_report = tabulate(report,
+                                   headers=['Job', 'Details'],
+                                   tablefmt='orgtbl')
             report_file.write(html_report)
             report_file.close()
-            print("Detail Job Report \"%s/report.html\" generated sucessfully" % self.cwd)
+            print("Detail Job Report \"%s \
+                  /report.html\" generated \
+                  sucessfully" % self.cwd)
 
     # pylint: disable=unused-argument
     def job_info(self, job_name, debug=False, report=False):
@@ -287,7 +313,9 @@ class JxCore():
             >>> job_info(job_name)
         """
         job_json = self.server.get_job_info(job_name)
-        job_info_list = self.details_from_json(job_json, self.JOB_DETAILS, jobflag=True)
+        job_info_list = self.details_from_json(job_json,
+                                               self.JOB_DETAILS,
+                                               jobflag=True)
         self.display_table(job_info_list, ["Job Data", "Detail"])
 
     def build_info(self, job_name, build_no):
@@ -295,7 +323,9 @@ class JxCore():
         Build Info
         """
         build_json = self.server.get_build_info(job_name, build_no)
-        build_info_list = self.details_from_json(build_json, self.BUILD_DETAILS, jobflag=False)
+        build_info_list = self.details_from_json(build_json,
+                                                 self.BUILD_DETAILS,
+                                                 jobflag=False)
         self.display_table(build_info_list, ["Build Data", "Detail"])
 
     def job_build(self, job_name):

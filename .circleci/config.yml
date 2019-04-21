@@ -160,10 +160,11 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
       - run:
-          name: run tests
+          name: Package
           command: |
             . venv/bin/activate
-            pycodestyle jxctl
+            pip install --upgrade setuptools wheel
+            python setup.py sdist bdist_wheel
       - save_cache:
           paths:
             - ./venv
@@ -181,3 +182,10 @@ workflows:
           requires:
             - unittest_py36
             - unittest_py37
+      - package:
+        requires:
+            - unittest_py36
+            - unittest_py37
+            - lint_check
+            - pep8_check
+          

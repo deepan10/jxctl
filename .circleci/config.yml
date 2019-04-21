@@ -123,10 +123,25 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+      - run:
+          name: Install Sonar
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+            unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/repo/sonar-scanner
+            export PATH=~/repo/sonar-scanner/bin:$PATH 
+      - run:
+          name: unittest and coverage
+          command: |
+            nosetests -v --with-xunit
+            coverage run --source jxctl setup.py test
+            coverage xml -i
+            coverage report -m
+            codecov
+            sonar-scanner
       - save_cache:
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
 workflows:
   version: 2

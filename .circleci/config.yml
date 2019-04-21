@@ -143,7 +143,7 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
           paths:
             - ./venv
-  package:
+  package_and_deploy:
     docker:
       - image: circleci/python:3.7
     working_directory: ~/repo
@@ -163,8 +163,9 @@ jobs:
           name: Package
           command: |
             . venv/bin/activate
-            pip install --upgrade setuptools wheel
+            pip install --upgrade setuptools wheel twine
             python setup.py sdist bdist_wheel
+            python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
       - save_cache:
           paths:
             - ./venv
@@ -182,7 +183,8 @@ workflows:
           requires:
             - unittest_py36
             - unittest_py37
-      - package:
+      - package_and_deploy:
+          type: approval
           requires:
             - unittest_py36
             - unittest_py37

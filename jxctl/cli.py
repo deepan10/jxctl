@@ -7,7 +7,6 @@ import click
 # sys.path.append("..")
 
 from pyfiglet import Figlet
-import jxctl
 
 try:
     from jxcore import JxCore
@@ -15,6 +14,12 @@ try:
 except ImportError:
     from .jxcore import JxCore
     from .ctxcore import CtxCore
+
+# Globals
+__author__ = 'Deepankumar Loganathan'
+__email__ = 'deepan0433@gmail.com'
+__version__ = '0.0.6-dev'
+__pypi__ = 'https://pypi.org/project/jxctl/'
 
 
 def print_help(ctx, param, value):  # pylint: disable=unused-argument
@@ -44,12 +49,12 @@ def version():
     click.echo(figlet.renderText('jxctl'))
     click.echo('A cli interface for your Jenkins Instance')
     click.echo("=========================================")
-    click.echo('jxctl version : ' + jxctl.__version__)
+    click.echo('jxctl version : ' + __version__)
     click.echo('Python version : ' + platform.python_version())
     click.echo('OS Version: ' + platform.system() + ' - ' + platform.version())
-    click.echo("Author: " + jxctl.__author__)
-    click.echo("Email: " + jxctl.__email__)
-    click.echo("PyPI: " + jxctl.__pypi__)
+    click.echo("Author: " + __author__)
+    click.echo("Email: " + __email__)
+    click.echo("PyPI: " + __pypi__)
     click.echo("=========================================")
 
 

@@ -1,4 +1,4 @@
-# jxctl [![Build Status](https://travis-ci.com/deepan10/jxctl.png?branch=develop)](https://travis-ci.com/deepan10/jxctl)
+# jxctl [![CircleCI](https://circleci.com/gh/deepan10/jxctl.svg?style=svg)](https://circleci.com/gh/deepan10/jxctl)  [![codecov](https://codecov.io/gh/deepan10/jxctl/branch/master/graph/badge.svg)](https://codecov.io/gh/deepan10/jxctl)
 A Command line interface for Jenkins.
 
 ## Installation

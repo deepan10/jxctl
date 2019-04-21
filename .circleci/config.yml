@@ -118,12 +118,6 @@ jobs:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           - v1-dependencies-
       - run:
-          name: Install Sonar
-          command: |
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
-            unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/repo/
-            export PATH=~/repo/sonar-scanner-3.2.0.1227-linux/bin:$PATH
-      - run:
           name: install dependencies
           command: |
             python3 -m venv venv
@@ -138,7 +132,13 @@ jobs:
             coverage xml -i
             coverage report -m
             codecov
-            sonar-scanner -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=myprojects
+      - run:
+          name: Sonar Analysis
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+            unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/repo/
+            export PATH=~/repo/sonar-scanner-3.2.0.1227-linux/bin:$PATH
+            ~/repo/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=myprojects
       - save_cache:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
           paths:

@@ -183,7 +183,7 @@ workflows:
             - unittest_py36
             - unittest_py37
       - package:
-        requires:
+          requires:
             - unittest_py36
             - unittest_py37
             - lint_check

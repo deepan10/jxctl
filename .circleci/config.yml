@@ -132,6 +132,7 @@ jobs:
       - run:
           name: unittest and coverage
           command: |
+            pip list
             nosetests -v --with-xunit
             coverage run --source jxctl setup.py test
             coverage xml -i

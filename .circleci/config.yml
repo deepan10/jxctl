@@ -118,17 +118,17 @@ jobs:
           - v1-dependencies-{{ checksum "requirements.txt" }}
           - v1-dependencies-
       - run:
+          name: Install Sonar
+          command: |
+            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+            unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/repo/sonar-scanner
+            export PATH=~/repo/sonar-scanner/bin:$PATH
+      - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-      - run:
-          name: Install Sonar
-          command: |
-            wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
-            unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/repo/sonar-scanner
-            export PATH=~/repo/sonar-scanner/bin:$PATH 
       - run:
           name: unittest and coverage
           command: |

@@ -97,15 +97,15 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
           name: run tests
           command: |
             . venv/bin/activate
             pycodestyle jxctl
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
   
   sonar_analysis:
     docker:
@@ -132,7 +132,7 @@ jobs:
       - run:
           name: unittest and coverage
           command: |
-            pip list
+            . venv/bin/activate
             nosetests -v --with-xunit
             coverage run --source jxctl setup.py test
             coverage xml -i

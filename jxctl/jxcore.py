@@ -96,6 +96,7 @@ class JxCore():
     def info(self):
         """
         Display the Context Information
+        
         Example::
             >>> jxctl context info
         """
@@ -212,6 +213,7 @@ class JxCore():
         """
         Display all jobs in Jenkins Context in a table
         :param name: Count count ``bool``
+        
         Example::
             >>> list_all_jobs()
             >>> list_all_jobs(count=True)
@@ -236,6 +238,7 @@ class JxCore():
         Display only the specified class jobs in a table
         :param name: Job class list option_list ``list``
         :param name: Count count ``bool``
+        
         Example::
             >>> list_jobs(option_list)
             >>> list_jobs(option_list, count=True)
@@ -261,6 +264,7 @@ class JxCore():
         """
         Display all plugins in Jenkins context as a table
         :param name: count flag count ``bool``
+        
         Example::
             >>> list_all_plugins()
             >>> list_all_plugins(count=True)

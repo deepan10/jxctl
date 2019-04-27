@@ -1,11 +1,15 @@
 """
 jxctl - setup
 """
+import os
 import setuptools
 from jxctl.cli import __author__, __email__, __version__
 
 with open("README.md", "r") as fh:
     LONG_DESC = fh.read()
+
+if os.environ["CIRCLE_BRANCH"] == "develop":
+    __version__ = __version__ + ".dev-" + os.environ["CIRCLE_BUILD_NUM"]
 
 setuptools.setup(
     name="jxctl",

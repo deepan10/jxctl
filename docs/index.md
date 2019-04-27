@@ -1,5 +1,6 @@
-# `jxctl` [![CircleCI](https://circleci.com/gh/deepan10/jxctl.svg?style=svg)](https://circleci.com/gh/deepan10/jxctl)  [![codecov](https://codecov.io/gh/deepan10/jxctl/branch/master/graph/badge.svg)](https://codecov.io/gh/deepan10/jxctl)  [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=jxctl&metric=alert_status)](https://sonarcloud.io/dashboard?id=jxctl)
-A Command line interface for Jenkins.
+# Welcome to Jxctl
+
+A command line interface for Jenkins.
 
 ## Installation
 
@@ -30,20 +31,3 @@ A Command line interface for Jenkins.
     `jxctl job <JOB NAME>`
     `jxctl job <JOB NAME> --build`
     `jxctl job <JOB NAME> --buildinfo <BUILD NUMBER>`
-
-## Current Work
-| Work      |   Description     | Status |
-|-----------|-------------------|--------|
-| Job       | Implemention Job & Build functionality(Create, Trigger, Detail, Delete) | InProgress | 
-| Testing   | Implement Test Cases, Suite | InProgress |
-| Handling Error   | Implement Exception Handling | InProgress | 
-| Node  | Implement Node functionality | ToDo | 
-| Report | Implement Report functionality | ToDo |
-| Docs | Document Generation | ToDo |
-
-## Contribution 
-We are happy to accept PR's. Those who are interested in contribution please have a look at below functional area's which are needed.
-
-    * Testing
-    * Docs
-    * Fine-Tuning

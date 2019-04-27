@@ -1,0 +1,5 @@
+site_name: jxctl
+nav:
+  - 'Home': index.md
+
+theme: readthedocs

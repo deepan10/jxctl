@@ -4,22 +4,23 @@ jxctl - command line implementations
 import platform
 import click
 
-#sys.path.append("..")
+# sys.path.append("..")
 
 from pyfiglet import Figlet
 
 try:
-    from jxcore import PyJenkins
+    from jxcore import JxCore
     from ctxcore import CtxCore
 except ImportError:
-    from .jxcore import PyJenkins
+    from .jxcore import JxCore
     from .ctxcore import CtxCore
 
 # Globals
 __author__ = 'Deepankumar Loganathan'
 __email__ = 'deepan0433@gmail.com'
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 __pypi__ = 'https://pypi.org/project/jxctl/'
+
 
 def print_help(ctx, param, value):  # pylint: disable=unused-argument
     """
@@ -30,12 +31,14 @@ def print_help(ctx, param, value):  # pylint: disable=unused-argument
     click.echo(ctx.get_help())
     ctx.exit()
 
+
 @click.group()
 def main():
     """
     Jenkins cli interface for Jenkins Instance
     """
     pass  # pylint: disable=unnecessary-pass
+
 
 @main.command()
 def version():
@@ -46,13 +49,14 @@ def version():
     click.echo(figlet.renderText('jxctl'))
     click.echo('A cli interface for your Jenkins Instance')
     click.echo("=========================================")
-    click.echo('jxctl version : '+ __version__)
-    click.echo('Python version : '+ platform.python_version())
-    click.echo('OS Version: '+ platform.system() + ' - ' + platform.version())
-    click.echo("Author: "+ __author__)
-    click.echo("Email: "+ __email__)
-    click.echo("PyPI: "+ __pypi__)
+    click.echo('jxctl version : ' + __version__)
+    click.echo('Python version : ' + platform.python_version())
+    click.echo('OS Version: ' + platform.system() + ' - ' + platform.version())
+    click.echo("Author: " + __author__)
+    click.echo("Email: " + __email__)
+    click.echo("PyPI: " + __pypi__)
     click.echo("=========================================")
+
 
 @main.group()
 def context():
@@ -61,6 +65,7 @@ def context():
     """
     pass  # pylint: disable=unnecessary-pass
 
+
 @main.group()
 def get():
     """
@@ -68,7 +73,7 @@ def get():
     """
     pass  # pylint: disable=unnecessary-pass
 
-#jxctl - context group
+
 @context.command()
 @click.option('--url',
               type=str,
@@ -89,6 +94,7 @@ def set(url, user, token, name):  # pylint: disable=redefined-builtin
     """
     CtxCore().set_context(url, user, token, name)
 
+
 @context.command()
 def info():
     """
@@ -96,16 +102,18 @@ def info():
     """
     figlet = Figlet(font='smslant')
     click.echo(figlet.renderText('jxctl'))
-    PyJenkins().info()
+    JxCore().info()
 
-#jxctl - get jobs
+
 @get.command()
 @click.option('--count', '-c',
               is_flag=True,
               help='Returns number of jobs')
 @click.option('--all',
               is_flag=True,
-              help='List all(maven, freestly, pipeline, multi-branch, matrix and org) jobs')
+              help='List all(maven, \
+                freestly, pipeline, \
+                multi-branch, matrix and org) jobs')
 @click.option('--maven',
               is_flag=True,
               help='List all maven style jobs')
@@ -147,14 +155,14 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
     """
     List Jenkins Context jobs
     """
-    option_dist = {"all":all,
-                   "maven":maven,
-                   "freestyle":freestyle,
-                   "pipeline":pipeline,
-                   "multi-branch":multi_branch,
-                   "matrix":matrix,
-                   "folders":folders,
-                   "org":org}
+    option_dist = {"all": all,
+                   "maven": maven,
+                   "freestyle": freestyle,
+                   "pipeline": pipeline,
+                   "multi-branch": multi_branch,
+                   "matrix": matrix,
+                   "folders": folders,
+                   "org": org}
     option_list = []
     if any(option_dist.values()):
         if count:
@@ -162,20 +170,20 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
                 for item in option_dist:
                     if option_dist[item]:
                         option_list.append(item)
-                PyJenkins().list_jobs(option_list, count=True)
+                JxCore().list_jobs(option_list, count=True)
             else:
-                PyJenkins().list_all_jobs(count=True)
+                JxCore().list_all_jobs(count=True)
         elif all:
-            PyJenkins().list_all_jobs()
+            JxCore().list_all_jobs()
         else:
             for item in option_dist:
                 if option_dist[item]:
                     option_list.append(item)
-            PyJenkins().list_jobs(option_list)
+            JxCore().list_jobs(option_list)
     else:
         print_help(ctx, None, value=True)
 
-#jxctl - get job
+
 @main.command()
 @click.argument('jobName')
 @click.option('--debug', is_flag=True, help='Returns complete job info')
@@ -187,25 +195,30 @@ def job(jobname, debug, build, report, buildinfo):
     Job level Operations
     """
     if buildinfo:
-        PyJenkins().build_info(jobname, buildinfo)
+        JxCore().build_info(jobname, buildinfo)
     elif build:
-        PyJenkins().job_build(jobname)
+        JxCore().job_build(jobname)
     else:
-        PyJenkins().job_info(jobname, debug, report)
+        JxCore().job_info(jobname, debug, report)
+
 
 @get.command()
-@click.option('--count', '-c', is_flag=True, help='Returns the number of plugin installed')
+@click.option('--count', '-c',
+              is_flag=True,
+              help='Returns the number of plugin installed')
 def plugins(count):
     """
     List all installed plugins of Jenkins Context
     """
     if count:
-        PyJenkins().list_all_plugins(count=True)
+        JxCore().list_all_plugins(count=True)
     else:
-        PyJenkins().list_all_plugins()
+        JxCore().list_all_plugins()
+
 
 if __name__ == '__main__':
     main()
+
 
 def start():
     """

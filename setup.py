@@ -32,7 +32,8 @@ setuptools.setup(
         'json2html>=1.2.1'
     ],
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
     ],
     entry_points={

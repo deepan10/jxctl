@@ -143,7 +143,7 @@ jobs:
           key: v1-dependencies-{{ checksum "requirements.txt" }}
           paths:
             - ./venv
-  package_and_deploy:
+  test_deploy:
     docker:
       - image: circleci/python:3.7
     working_directory: ~/repo
@@ -170,6 +170,34 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+  
+  prod_deploy:
+    docker:
+      - image: circleci/python:3.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: Package
+          command: |
+            . venv/bin/activate
+            pip install --upgrade setuptools wheel twine
+            python setup.py sdist bdist_wheel
+            python -m twine upload -u $TWINE_USERNAME -p $TWINE_PASSWORD dist/*
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
 
 workflows:
   version: 2
@@ -183,6 +211,16 @@ workflows:
           requires:
             - unittest_py36
             - unittest_py37
+      - test_deploy:
+          filters:
+            branches:
+              only: develop
+          requires:
+            - unittest_py36
+            - unittest_py37
+            - lint_check
+            - pep8_check
+            - sonar_analysis
       - onhold:
           type: approval
           requires:
@@ -191,7 +229,11 @@ workflows:
             - lint_check
             - pep8_check
             - sonar_analysis
-      - package_and_deploy:
+            - test_deploy
+      - prod_deploy:
+          filters:
+            branches:
+              only: master
           requires:
             - unittest_py36
             - unittest_py37
@@ -199,4 +241,3 @@ workflows:
             - pep8_check
             - sonar_analysis
             - onhold
-          

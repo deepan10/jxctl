@@ -11,6 +11,7 @@
 ![PyPI](https://img.shields.io/pypi/v/jxctl.svg?color=f&style=plastic)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jxctl.svg?color=f&style=plastic)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/jxctl.svg?color=f&style=plastic)
+
 ![Libraries.io dependency status for specific release](https://img.shields.io/librariesio/release/pypi/jxctl/0.0.6.svg?style=plastic)
 
 [![Documentation Status](https://readthedocs.org/projects/jxctl/badge/?version=latest)](https://jxctl.readthedocs.io/en/latest/?badge=latest)

@@ -136,11 +136,13 @@ class JxCoreTest(unittest.TestCase):
         jxcore.job_info("test-pipeline-job")
         expected_plugin_list = SupportJSON().job_info_return
         mock_display.assert_called_with(expected_plugin_list, "json")
-    
+
+    @mock.patch("time.ctime")
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     @mock.patch("jxctl.jxcore.CtxCore")
     @mock.patch("jenkins.Jenkins")
-    def test_build_info(self, mock_jenkins, mock_ctxcore, mock_print):
+    def test_build_info(self, mock_jenkins, mock_ctxcore, mock_print, mock_time):
+        mock_time.return_value = "Fri Jul  3 11:10:41 50815"
         mock_ctxcore_obj = mock_ctxcore.return_value
         mock_server = mock_jenkins.return_value
         mock_ctxcore_obj.validate_context.return_value = True

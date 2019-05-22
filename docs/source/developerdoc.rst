@@ -11,6 +11,6 @@ Developer Documentation
    :maxdepth: 3
    :caption: Module Class Reference:
 
-   Ctl
-   JxCore
-   CtxCore
+   ctxcore
+   jxcore
+   jxsupport

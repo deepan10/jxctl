@@ -97,6 +97,7 @@ def list_context(all, context_name):
 
 
 @context.command("set")
+@click.argument("context_name")
 @click.option("--url",
               type=str,
               help="URL of the Jenkins instance")
@@ -107,22 +108,18 @@ def list_context(all, context_name):
               type=str,
               nargs=1,
               help="Access token / password of the username")
-@click.option("--name",
-              type=str,
-              required=True,
-              help="Name of the Jenkins context")
 @click.option("--default",
               is_flag=True,
               help="Set as current context")
-def set_context(url,
+def set_context(context_name,
+                url,
                 user,
                 token,
-                name,
                 default):  # pylint: disable=redefined-builtin
     """
     Set Jenkins Context
     """
-    CtxCore().set_context(name, url, user, token, default)
+    CtxCore().set_context(context_name, url, user, token, default)
 
 
 @context.command("delete")
@@ -135,7 +132,7 @@ def delete_context(context_name):
 
 
 @context.command()
-def view_current():
+def info():
     """
     Show the infomation about your Jenkins Context
     """
@@ -186,9 +183,6 @@ def set_current(context_name):
 @click.option("--matrix",
               is_flag=True,
               help="List all matrix jobs")
-@click.option("--folders",
-              is_flag=True,
-              help="List all folders in Jenkins context")
 @click.option("--org",
               is_flag=True,
               help="List all Organization jobs")
@@ -209,7 +203,6 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
          pipeline,
          multi_branch,
          matrix,
-         folders,
          org,
          format):
     """
@@ -221,7 +214,6 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
                    "pipeline": pipeline,
                    "multi-branch": multi_branch,
                    "matrix": matrix,
-                   "folders": folders,
                    "org": org}
     option_list = []
     if any(option_dist.values()):
@@ -242,6 +234,21 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
             JxCore().list_jobs(option_list, format)
     else:
         print_help(ctx, None, value=True)
+
+
+@get.command("folders")
+@click.option("--format", "-f",
+              nargs=1,
+              required=False,
+              help="Display format(json/table). Default=json")
+@click.option("--count", "-c",
+              is_flag=True,
+              help="Returns the number of plugin installed")
+def folders(format, count):
+    """
+    Get all folders
+    """
+    JxCore().list_all_folders(format, count)
 
 
 @get.command("plugins")
@@ -275,7 +282,7 @@ def nodes(format):
 @click.argument("node_name")
 @click.option("--make-offline", is_flag=True)
 @click.option("--make-online", is_flag=True)
-@click.option("-m", "--message")
+@click.option("-m", "--message", required=False)
 @click.option("-f", "--format", nargs=1, required=False,
               help="Display format(json/table). Default=json")
 def node(node_name, make_offline, make_online, message, format):

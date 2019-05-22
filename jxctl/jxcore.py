@@ -31,7 +31,6 @@ class JxCore():
         "maven": "hudson.maven.MavenModuleSet",
         "pipeline": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
         "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",  # noqa  # pylint: disable=line-too-long
-        "folders": "com.cloudbees.hudson.plugins.folder.Folder",
         "matrix": "hudson.matrix.MatrixProject",
         "org": "jenkins.branch.OrganizationFolder"
     }
@@ -84,32 +83,6 @@ class JxCore():
             print("Connection Error... \
                    Make sure your Jenkins context is up and running")
 
-    # @staticmethod
-    # def display_table(display_list, display_header, count_flag=False):
-    #     """
-    #     Display the result in list to Table format.
-    #     Having the special param count_flag,
-    #     If true will display the count of the list in table.
-    #     :param name: OutputList display_list ``list``
-    #     :param name: HeaderList display_header ``list``
-    #     :param name: Count count_flag ``bool``
-
-    #     Example::
-    #         >>> self.display_table(list_item, list_header)
-    #         >>> self.display_table(list_item, list_header, count_flag=True)
-    #     """
-    #     l =[]
-    #     for job in display_list.get("plugins"):
-    #         l.append([v for k, v in job.items()])
-    #     if not count_flag:
-    #         print(tabulate(l,
-    #                        headers=display_header,
-    #                        tablefmt='orgtbl'))
-    #     else:
-    #         print(tabulate([[len(display_list)]],
-    #                        headers=display_header,
-    #                        tablefmt='orgtbl'))
-
     def fetch_job_type(self, search_value):
         """
         Find the key by give the value in DICT
@@ -125,6 +98,30 @@ class JxCore():
                 return_key = key
                 break
         return return_key
+
+    def list_all_folders(self, format_display="json", count=False):
+        """
+        Display all folders in Jenkins Context
+        :param name: Count count ``bool``
+
+        Example::
+            >>> list_all_folders()
+            >>> list_all_folders(count=True)
+        """
+        folders_list = []
+        folders = self.server.get_all_jobs(folder_depth=None,
+                                           folder_depth_per_request=50)
+        try:
+            for folder_item in folders:
+                if folder_item["_class"] == "com.cloudbees.hudson.plugins.folder.Folder":
+                    folders_list.extend([{
+                        "foldername": folder_item["fullname"],
+                        "folderurl": folder_item["url"]
+                    }])
+            folders = {"folders": folders_list}
+        except KeyError:
+            raise KeyError("Key not found")
+        self.jxsupport.print(folders, format_display, count)
 
     def list_all_jobs(self, format_display="json", count=False):
         """
@@ -307,7 +304,9 @@ class JxCore():
         """
         Node operations like make offile and online
         """
-        if action == "offline":
+        if action == "offline" and message:
             self.server.disable_node(node_name, msg=message)
+        elif action == "offline" and not message:
+            self.server.disable_node(node_name)
         elif action == "online":
             self.server.enable_node(node_name)

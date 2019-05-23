@@ -1,5 +1,0 @@
-cli
-===
-
-.. automodule:: cli
-   :members:

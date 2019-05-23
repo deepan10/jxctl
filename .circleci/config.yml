@@ -101,7 +101,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pycodestyle jxctl
+            pycodestyle --config=.pycodestyle jxctl
       - save_cache:
           paths:
             - ./venv
@@ -222,6 +222,9 @@ workflows:
             - pep8_check
             - sonar_analysis
       - onhold:
+          filters:
+            branches:
+              only: master
           type: approval
           requires:
             - unittest_py36

@@ -1,5 +1,5 @@
-JxCore
-==================
+jxcore
+======
 
 .. automodule:: jxcore
 .. autoclass:: JxCore

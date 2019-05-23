@@ -10,8 +10,8 @@ Welcome to jxctl's documentation!
    :caption: Table of Contents:
 
    userguide
-   commandref
    developerdoc
+   commandref
 
 Indices and tables
 ==================

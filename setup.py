@@ -3,7 +3,7 @@ jxctl - setup
 """
 import os
 import setuptools
-from jxctl.cli import __author__, __email__, __version__
+from jxctl.clicore import __author__, __email__, __version__
 
 with open("README.md", "r") as fh:
     LONG_DESC = fh.read()
@@ -28,8 +28,7 @@ setuptools.setup(
         'requests>=2.20.1',
         'tabulate>=0.8.2',
         'pyfiglet>=0.7.6',
-        'python-jenkins>=1.4.0',
-        'json2html>=1.2.1'
+        'python-jenkins>=1.4.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",
@@ -39,7 +38,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'jxctl = jxctl.cli:start'
+            'jxctl = jxctl.clicore:start'
         ]
     },
 )

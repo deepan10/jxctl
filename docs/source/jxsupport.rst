@@ -1,5 +1,5 @@
-JxSupport
-==================
+jxsupport
+=========
 
 .. automodule:: jxsupport
 .. autoclass:: JxSupport

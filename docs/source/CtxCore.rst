@@ -1,5 +1,5 @@
-CtxCore
-========================
+ctxcore
+=======
 
 .. automodule:: ctxcore
 .. autoclass:: CtxCore

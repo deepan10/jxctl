@@ -1,5 +1,5 @@
 """
-jxctl - command line implementations
+clicore module for command line implementation
 """
 import sys
 import platform
@@ -46,7 +46,7 @@ def print_help(ctx, param, value):
 @click.group()
 def main():
     """
-    Jenkins cli interface for Jenkins Instance
+    jxctl - jenkins command line tool
     """
     pass
 
@@ -55,7 +55,7 @@ def main():
 @main.group()
 def get():
     """
-    List the Resources(jobs, plugin, build, nodes, etc.. ) from Jenkins context
+    Get the jenkins resources(jobs, plugin, nodes, etc.. ) from jenkins
     """
     pass
 
@@ -91,7 +91,7 @@ def version():
 @click.option("-a", "--all", is_flag=True, required=False)
 def list_context(all, context_name):
     """
-    List Jenkins context
+    List available jenkins context
     """
     CtxCore().list_context(all, context_name)
 
@@ -117,7 +117,7 @@ def set_context(context_name,
                 token,
                 default):  # pylint: disable=redefined-builtin
     """
-    Set Jenkins Context
+    Set jenkins Context
     """
     CtxCore().set_context(context_name, url, user, token, default)
 
@@ -126,7 +126,7 @@ def set_context(context_name,
 @click.argument("context_name", type=str, nargs=1)
 def delete_context(context_name):
     """
-    Delete Jenkins context
+    Delete a jenkins context
     """
     CtxCore().delete_context(context_name)
 
@@ -134,7 +134,7 @@ def delete_context(context_name):
 @context.command()
 def info():
     """
-    Show the infomation about your Jenkins Context
+    Show the infomation about jenkins
     """
     click.echo(BANNER)
     JxCore().info()
@@ -145,7 +145,7 @@ def info():
 @click.argument("context_to")
 def rename_context(context_from, context_to):
     """
-    Show the infomation about your Jenkins Context
+    Rename the jenkins context
     """
     CtxCore().rename_context(context_from, context_to)
 
@@ -154,7 +154,7 @@ def rename_context(context_from, context_to):
 @click.argument("context_name")
 def set_current(context_name):
     """
-    Show the infomation about your Jenkins Context
+    Set the current jenkins context
     """
     CtxCore().set_current_context(context_name)
 
@@ -206,7 +206,7 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
          org,
          format):
     """
-    List Jenkins Context jobs
+    Get list of job from jenkins
     """
     option_dist = {"all": all,
                    "maven": maven,
@@ -246,7 +246,7 @@ def jobs(ctx,  # pylint: disable=too-many-arguments
               help="Returns the number of plugin installed")
 def folders(format, count):
     """
-    Get all folders
+    Get all folders from jenkins
     """
     JxCore().list_all_folders(format, count)
 
@@ -261,7 +261,7 @@ def folders(format, count):
               help="Returns the number of plugin installed")
 def plugins(format, count):
     """
-    List all installed plugins of Jenkins Context
+    List all installed plugins from jenkins
     """
     if count:
         JxCore().list_all_plugins(format, count=True)
@@ -273,7 +273,7 @@ def plugins(format, count):
 @click.option("-f", "--format", nargs=1, required=False)
 def nodes(format):
     """
-    List of nodes
+    Get list of nodes from jenkins
     """
     JxCore().list_nodes(format)
 
@@ -282,12 +282,12 @@ def nodes(format):
 @click.argument("node_name")
 @click.option("--make-offline", is_flag=True)
 @click.option("--make-online", is_flag=True)
-@click.option("-m", "--message", required=False)
+@click.option("-m", "--message", required=False, help="Offline reason")
 @click.option("-f", "--format", nargs=1, required=False,
               help="Display format(json/table). Default=json")
 def node(node_name, make_offline, make_online, message, format):
     """
-    Node operations
+    Get node info and operation
     """
     if make_offline and not make_online:
         JxCore().node_action(node_name, "offline", message)
@@ -303,15 +303,15 @@ def node(node_name, make_offline, make_online, message, format):
 @click.option("--params",
               nargs=1,
               type=dict,
-              help="Build Params in Key:Value pair")
+              help="Trigger build with params in Key:Value pair")
 @click.option("--abort", nargs=1, type=int, help="Abort the build")
-@click.option("--buildinfo", nargs=1, type=int)
-@click.option("--delete", "-d", is_flag=True, help="Delete the job")
+@click.option("--buildinfo", nargs=1, type=int, help="Get build info")
+@click.option("--delete", "-d", is_flag=True, help="Delete a job")
 @click.option("-f", "--format", nargs=1, required=False,
               help="Display format(json/table). Default=json")
 def job(job_name, build, params, abort, buildinfo, delete, format):
     """
-    Job level Operations
+    Job info and operation
     """
     if buildinfo:
         JxCore().build_info(job_name, buildinfo, format)
@@ -344,6 +344,6 @@ if __name__ == "__main__":
 
 def start():
     """
-    start jxctl
+    start method for cli to start with click top level command group
     """
     main()

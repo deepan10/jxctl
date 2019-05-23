@@ -1,5 +1,5 @@
 """
-ctxcore - Core context command line methods
+ctxcore - Core module for context operation
 """
 import os
 import json
@@ -13,8 +13,7 @@ except ImportError:
 
 class CtxCore():
     """
-    Command Line Core methods
-    Jenkins Context initialization, modification & validation
+    CtxCore class for context operation
     """
     USER_HOME = os.path.expanduser('~')
     CONTEXT_FILE_PATH = USER_HOME + "/.jxctl"
@@ -38,7 +37,7 @@ class CtxCore():
 
     def __init__(self):
         """
-        Init the CtxCore for Command Line context.
+        Initialize the CtxCore class
         """
         self.jxsupport = JxSupport()
         self.ctx_url = self.ctx_name = self.ctx_user = self.ctx_token = None
@@ -63,7 +62,8 @@ class CtxCore():
 
     def load_context(self):
         """
-        Load context file
+        Load context file from ~/.jxctl/config
+        :raise `FileNotFoundError`: raise file not found exception
         """
         try:
             with open(self.CONTEXT_FILE, "r") as context_file:
@@ -96,6 +96,8 @@ class CtxCore():
     def set_current_context(self, name):
         """
         Change the current context
+
+        :param `name`: context name
         """
         if name in self.context_list:
             self.jx_context["current-context"] = name
@@ -107,6 +109,12 @@ class CtxCore():
     def set_context(self, name, url=None, user=None, token=None, default=None):
         """
         Add/Edit Jenkins context
+
+        :param `name`: context name `str`
+        :param `url`: jenkins url `url`
+        :param `user`: jenkins user `str`
+        :param `token`: jenkins password/token `str`
+        :param `default`: set as default `bool`
         """
         if name in self.context_list:
             for context in self.jx_context["contexts"]:
@@ -132,6 +140,8 @@ class CtxCore():
     def list_context(self, all=None, context_name=None):
         """
         List Jenkins context
+        :param `name`: all `bool`
+        :param `context_name`: context name `str`
         """
         context_list = []
         if all:
@@ -183,9 +193,8 @@ class CtxCore():
     def delete_context(self, context_name):
         """
         Delete the context
+        :param `context_name`: context name `str`
         """
-        import pprint
-        pprint.pprint(self.jx_context)
         if self.jx_context["current-context"] == context_name:
             self.jx_context["current-context"] = self.jx_context["contexts"][0]["name"]
 
@@ -197,6 +206,8 @@ class CtxCore():
     def rename_context(self, context_from, context_to):
         """
         Rename the context name
+        :param `context_from`: old context name `str`
+        :param `context_to`: new context name `str`
         """
         if context_from in self.context_list:
             for context in self.jx_context["contexts"]:
@@ -206,6 +217,6 @@ class CtxCore():
 
     def validate_context(self):
         """
-        Validate the context to proceed with Jenkins CTL Operations.
+        Check jenkins user, token and url is not null in context
         """
         return bool(self.ctx_url and self.ctx_token and self.ctx_user)

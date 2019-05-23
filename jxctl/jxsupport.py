@@ -1,5 +1,5 @@
 """
-jxsupport
+jxsupport support module jxctl
 """
 import pprint
 from tabulate import tabulate
@@ -7,22 +7,15 @@ from tabulate import tabulate
 
 class JxSupport():
     """
-    JxSupport
+    JxSupport class for support opertions like display
     """
 
     @staticmethod
-    def print_table(source, count=False):
+    def _print_table(source, count=False):
         """
-        Display the result in list to Table format.
-        Having the special param count_flag,
-        If true will display the count of the list in table.
-        :param name: OutputList display_list ``list``
-        :param name: HeaderList display_header ``list``
-        :param name: Count count_flag ``bool``
-
-        Example::
-            >>> self.display_table(list_item, list_header)
-            >>> self.display_table(list_item, list_header, count_flag=True)
+        Display the dictionary in table format
+        :param `source`: source dictionary `dict` 
+        :param `count`: count flag `bool`
         """
         table_value = []
         table_header = []
@@ -40,9 +33,11 @@ class JxSupport():
                                tablefmt='orgtbl'))
 
     @staticmethod
-    def print_json(source, count=False):
+    def _print_json(source, count=False):
         """
-        Display JSON in human readable format
+        Display the dictionary in json format
+        :param `source`: source dictionary `dict` 
+        :param `count`: count flag `bool`
         """
         if not count:
             pprint.pprint(source)
@@ -54,9 +49,12 @@ class JxSupport():
 
     def print(self, source, format_display="json", count=False):
         """
-        Print method
+        Print method to display result
+        :param `source`: source dictionary `dict`
+        :param `format_display`: displat format by `json` is default format `str`
+        :param `count`: count flag `bool`
         """
         if format_display == "table":
-            self.print_table(source, count)
+            self._print_table(source, count)
         else:
-            self.print_json(source, count)
+            self._print_json(source, count)

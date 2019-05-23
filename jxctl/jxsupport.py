@@ -11,10 +11,10 @@ class JxSupport():
     """
 
     @staticmethod
-    def _print_table(source, count=False):
+    def print_table(source, count=False):
         """
         Display the dictionary in table format
-        :param `source`: source dictionary `dict` 
+        :param `source`: source dictionary `dict`
         :param `count`: count flag `bool`
         """
         table_value = []
@@ -33,10 +33,10 @@ class JxSupport():
                                tablefmt='orgtbl'))
 
     @staticmethod
-    def _print_json(source, count=False):
+    def print_json(source, count=False):
         """
         Display the dictionary in json format
-        :param `source`: source dictionary `dict` 
+        :param `source`: source dictionary `dict`
         :param `count`: count flag `bool`
         """
         if not count:
@@ -55,6 +55,6 @@ class JxSupport():
         :param `count`: count flag `bool`
         """
         if format_display == "table":
-            self._print_table(source, count)
+            self.print_table(source, count)
         else:
-            self._print_json(source, count)
+            self.print_json(source, count)

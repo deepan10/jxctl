@@ -16,6 +16,7 @@ except ImportError:
     from .jxsupport import JxSupport
 
 
+# pylint:  disable=useless-object-inheritance
 class JxCore(object):
     """
     JxCore class for Jenkins operations

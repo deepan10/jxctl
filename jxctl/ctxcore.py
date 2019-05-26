@@ -11,6 +11,7 @@ except ImportError:
     from .jxsupport import JxSupport
 
 
+# pylint:  disable=useless-object-inheritance
 class CtxCore(object):
     """
     CtxCore class for context operation
@@ -79,8 +80,6 @@ class CtxCore(object):
             raise FileNotFoundError("File {0} not found".format(self.CONTEXT_FILE))
         except TypeError:
             raise TypeError()
-
-        
 
     def write_context_file(self):
         """
@@ -201,7 +200,7 @@ class CtxCore(object):
         for context in self.jx_context["contexts"]:
             if context["name"] == context_name:
                 self.jx_context["contexts"].remove(context)
-        
+
         if self.jx_context["current-context"] == context_name:
             self.jx_context["current-context"] = self.jx_context["contexts"][0]["name"]
         self.write_context_file()

@@ -16,7 +16,7 @@ except ImportError:
     from .jxsupport import JxSupport
 
 
-class JxCore():
+class JxCore(object):
     """
     JxCore class for Jenkins operations
     """
@@ -25,12 +25,12 @@ class JxCore():
     username = ''
     version = ''
     cwd = ''
-
+    # noqa  # pylint: disable=line-too-long
     JOB_TYPE = {
         "freestyle": "hudson.model.FreeStyleProject",
         "maven": "hudson.maven.MavenModuleSet",
         "pipeline": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
-        "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",  # noqa  # pylint: disable=line-too-long
+        "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",
         "matrix": "hudson.matrix.MatrixProject",
         "org": "jenkins.branch.OrganizationFolder"
     }

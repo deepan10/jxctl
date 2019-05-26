@@ -1,4 +1,3 @@
-# from .test_base import jxctlTestBase
 import unittest
 from unittest import mock
 from jxctl.jxcore import JxCore

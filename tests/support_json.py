@@ -355,7 +355,7 @@ class SupportJSON():
 
         self.set_context_result = {
             "version": 1.0,
-            "current-context": "test",
+            "current-context": "local-test",
             "contexts": [
                 {
                     "context":
@@ -387,6 +387,31 @@ class SupportJSON():
             ]
         }
 
+        self.set_context_return_1 = {
+            "version": 1.0,
+            "current-context": "test",
+            "contexts": [
+                {
+                    "context":
+                    {
+                        "token": "test_token",
+                        "url": "test_url",
+                        "user": "test_user"
+                    },
+                    "name": "test"
+                },
+                {
+                    "context":
+                    {
+                        "token": "test-token",
+                        "url": "test-url",
+                        "user": "test-user"
+                    },
+                    "name": "local"
+                }
+            ]
+        }
+
         self.delete_context_report = {
             "version": 1.0,
             "current-context": "test",
@@ -399,6 +424,22 @@ class SupportJSON():
                         "user": "test_user"
                     },
                     "name": "test"
+                }
+            ]
+        }
+
+        self.delete_current_context_return = {
+            "version": 1.0,
+            "current-context": "local",
+            "contexts": [
+                {
+                    "context":
+                    {
+                        "token": "local_token",
+                        "url": "local_url",
+                        "user": "local_user"
+                    },
+                    "name": "local"
                 }
             ]
         }
@@ -427,3 +468,37 @@ class SupportJSON():
                 }
             ]
         }
+
+        self.list_context_all = {
+            'contexts': [
+                {
+                    'contextname': 'test*',
+                    'contexturl': 'test_url'
+                },
+                {
+                    'contextname': 'local',
+                    'contexturl': 'local_url'
+                }
+            ]
+        }
+
+        self.list_context_current = {
+            'contexts': [{
+                'contextname': 'test*',
+                'contexturl': 'test_url'
+            }]
+        }
+
+        self.list_context_by_name = {
+            'contexts': [{
+                'contextname': 'local',
+                'contexturl': 'local_url'
+            }
+        ]}
+
+        self.list_context_by_currentname = {
+            'contexts': [{
+                'contextname': 'test*',
+                'contexturl': 'test_url'
+            }
+        ]}

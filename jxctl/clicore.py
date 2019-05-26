@@ -20,7 +20,7 @@ __version__ = "0.0.8a"
 __pypi__ = "https://pypi.org/project/jxctl/"
 
 # pylint:  disable=anomalous-backslash-in-string
-BANNER = """
+BANNER = r"""
 
       _          __  __
      (_)_ ______/ /_/ /
@@ -96,6 +96,7 @@ def list_context(all, context_name):
     CtxCore().list_context(all, context_name)
 
 
+# pylint: disable=redefined-builtin
 @context.command("set")
 @click.argument("context_name")
 @click.option("--url",
@@ -115,7 +116,7 @@ def set_context(context_name,
                 url,
                 user,
                 token,
-                default):  # pylint: disable=redefined-builtin
+                default):
     """
     Set jenkins Context
     """
@@ -159,6 +160,7 @@ def set_current(context_name):
     CtxCore().set_current_context(context_name)
 
 
+# pylint: disable=redefined-builtin, too-many-arguments
 @get.command()
 @click.option("--count", "-c",
               is_flag=True,
@@ -195,9 +197,9 @@ def set_current(context_name):
               callback=print_help,
               help="Print help message")
 @click.pass_context
-def jobs(ctx,  # pylint: disable=too-many-arguments
+def jobs(ctx,
          count,
-         all,  # pylint: disable=redefined-builtin
+         all,
          maven,
          freestyle,
          pipeline,

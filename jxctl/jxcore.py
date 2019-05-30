@@ -26,6 +26,7 @@ class JxCore(object):
     username = ''
     version = ''
     cwd = ''
+
     # noqa  # pylint: disable=line-too-long
     JOB_TYPE = {
         "freestyle": "hudson.model.FreeStyleProject",

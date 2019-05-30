@@ -202,7 +202,7 @@ class SupportJSON():
                 {"pluginname" : "Pipeline: Step API", "pluginkey" : "workflow-step-api", "version" : 2.17},
                 {"pluginname" : "SCM API Plugin", "pluginkey" : "scm-api", "version" : 2.3}
             ]}
-        
+
         self.folders_list = [
             {
                 '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',

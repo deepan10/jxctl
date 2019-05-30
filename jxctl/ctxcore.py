@@ -203,6 +203,7 @@ class CtxCore(object):
 
         if self.jx_context["current-context"] == context_name:
             self.jx_context["current-context"] = self.jx_context["contexts"][0]["name"]
+
         self.write_context_file()
 
     def rename_context(self, context_from, context_to):

@@ -196,7 +196,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.build_info("test-pipeline-job", "10")
         expected_build_info = SupportJSON().build_info_return
         mock_print.assert_called_with(expected_build_info, "json")
-    
+
     @mock.patch("jxctl.jxcore.CtxCore")
     @mock.patch("jenkins.Jenkins.build_job")
     def test_trigger_job(self, mock_jenkins, _):

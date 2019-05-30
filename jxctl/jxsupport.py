@@ -25,8 +25,6 @@ class JxSupport(object):
                 table_value.append([v for v in item.values()])
                 table_header.append([k for k in item.keys()])
             if not count:
-                print(table_value)
-                print(table_header)
                 print(tabulate(table_value,
                                headers=table_header[0],
                                tablefmt='orgtbl'))

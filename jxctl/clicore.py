@@ -95,6 +95,7 @@ def list_context(all, context_name):
     """
     CtxCore().list_context(all, context_name)
 
+
 # pylint: disable=redefined-builtin
 @context.command("set")
 @click.argument("context_name")

@@ -129,7 +129,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore.list_all_plugins()
         expected_plugins = SupportJSON().plugins_list_return
         mock_print.assert_called_with(expected_plugins, "json", False)
-    
+
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     @mock.patch("jxctl.jxcore.CtxCore")
     @mock.patch("jenkins.Jenkins")

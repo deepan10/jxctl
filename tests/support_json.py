@@ -202,6 +202,130 @@ class SupportJSON():
                 {"pluginname" : "Pipeline: Step API", "pluginkey" : "workflow-step-api", "version" : 2.17},
                 {"pluginname" : "SCM API Plugin", "pluginkey" : "scm-api", "version" : 2.3}
             ]}
+
+        self.folders_list = [
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'red',
+                'fullname': 'dnotifica',
+                'name': 'dnotifica',
+                'url': 'http://localhost:8080/job/dnotifica/'},
+            {
+                '_class': 'hudson.maven.MavenModuleSet',
+                'color': 'blue',
+                'fullname': 'dnotifica-mvn',
+                'name': 'dnotifica-mvn',
+                'url': 'http://localhost:8080/job/dnotifica-mvn/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'blue',
+                'fullname': 'dnotifica-pipe',
+                'name': 'dnotifica-pipe',
+                'url': 'http://localhost:8080/job/dnotifica-pipe/'},
+            {
+                '_class': 'com.cloudbees.hudson.plugins.folder.Folder',
+                'fullname': 'folder1',
+                'jobs': [{'_class': 'com.cloudbees.hudson.plugins.folder.Folder',
+                            'fullname': 'folder1/sub_folder1',
+                            'jobs': [{'_class': 'hudson.model.FreeStyleProject',
+                                    'color': 'blue',
+                                    'fullname': 'folder1/sub_folder1/test',
+                                    'name': 'test',
+                                    'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}],
+                            'name': 'sub_folder1',
+                            'url': 'http://localhost:8080/job/folder1/job/sub_folder1/'}],
+                'name': 'folder1',
+                'url': 'http://localhost:8080/job/folder1/'},
+            {
+                '_class': 'hudson.model.FreeStyleProject',
+                'color': 'notbuilt',
+                'fullname': 'free_style_1',
+                'name': 'free_style_1',
+                'url': 'http://localhost:8080/job/free_style_1/'},
+            {
+                '_class': 'hudson.maven.MavenModuleSet',
+                'color': 'notbuilt',
+                'fullname': 'maven_test1',
+                'name': 'maven_test1',
+                'url': 'http://localhost:8080/job/maven_test1/'},
+            {
+                '_class': 'hudson.model.FreeStyleProject',
+                'color': 'blue',
+                'fullname': 'pytest',
+                'name': 'pytest',
+                'url': 'http://localhost:8080/job/pytest/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'blue',
+                'fullname': 'slack-item',
+                'name': 'slack-item',
+                'url': 'http://localhost:8080/job/slack-item/'},
+            {
+                '_class': 'hudson.maven.MavenModuleSet',
+                'color': 'blue',
+                'fullname': 'smp_test',
+                'name': 'smp_test',
+                'url': 'http://localhost:8080/job/smp_test/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'red',
+                'fullname': 'test-dsl',
+                'name': 'test-dsl',
+                'url': 'http://localhost:8080/job/test-dsl/'},
+            {
+                '_class': 'hudson.model.FreeStyleProject',
+                'color': 'blue',
+                'fullname': 'test-logstash',
+                'name': 'test-logstash',
+                'url': 'http://localhost:8080/job/test-logstash/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'blue',
+                'fullname': 'test-pipe-lib',
+                'name': 'test-pipe-lib',
+                'url': 'http://localhost:8080/job/test-pipe-lib/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'blue',
+                'fullname': 'test-pipe-logstash',
+                'name': 'test-pipe-logstash',
+                'url': 'http://localhost:8080/job/test-pipe-logstash/'},
+            {
+                '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob',
+                'color': 'blue',
+                'fullname': 'test_pipeline',
+                'name': 'test_pipeline',
+                'url': 'http://localhost:8080/job/test_pipeline/'},
+            {
+                '_class': 'com.cloudbees.hudson.plugins.folder.Folder',
+                'fullname': 'folder1/sub_folder1',
+                'jobs': [{'_class': 'hudson.model.FreeStyleProject',
+                            'color': 'blue',
+                            'fullname': 'folder1/sub_folder1/test',
+                            'name': 'test',
+                            'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}],
+                'name': 'sub_folder1',
+                'url': 'http://localhost:8080/job/folder1/job/sub_folder1/'},
+            {
+                '_class': 'hudson.model.FreeStyleProject',
+                'color': 'blue',
+                'fullname': 'folder1/sub_folder1/test',
+                'name': 'test',
+                'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}
+        ]
+
+        self.folders_list_return = {
+            'folders': [
+                {
+                    'foldername': 'test-folder',
+                    'folderurl': 'http://localhost:8080/job/test-folder/'
+                },
+                {
+                    'foldername': 'test-folder/test-sub-folder',
+                    'folderurl': 'http://localhost:8080/job/test-folder/job/test-sub-folder/'
+                }
+            ]
+        }
         
         self.job_info = {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
@@ -355,7 +479,7 @@ class SupportJSON():
 
         self.set_context_result = {
             "version": 1.0,
-            "current-context": "test",
+            "current-context": "local-test",
             "contexts": [
                 {
                     "context":
@@ -387,6 +511,31 @@ class SupportJSON():
             ]
         }
 
+        self.set_context_return_1 = {
+            "version": 1.0,
+            "current-context": "test",
+            "contexts": [
+                {
+                    "context":
+                    {
+                        "token": "test_token",
+                        "url": "test_url",
+                        "user": "test_user"
+                    },
+                    "name": "test"
+                },
+                {
+                    "context":
+                    {
+                        "token": "test-token",
+                        "url": "test-url",
+                        "user": "test-user"
+                    },
+                    "name": "local"
+                }
+            ]
+        }
+
         self.delete_context_report = {
             "version": 1.0,
             "current-context": "test",
@@ -399,6 +548,22 @@ class SupportJSON():
                         "user": "test_user"
                     },
                     "name": "test"
+                }
+            ]
+        }
+
+        self.delete_current_context_return = {
+            "version": 1.0,
+            "current-context": "local",
+            "contexts": [
+                {
+                    "context":
+                    {
+                        "token": "local_token",
+                        "url": "local_url",
+                        "user": "local_user"
+                    },
+                    "name": "local"
                 }
             ]
         }
@@ -424,6 +589,273 @@ class SupportJSON():
                         "user": "local_user"
                     },
                     "name": "prod"
+                }
+            ]
+        }
+
+        self.list_context_all = {
+            'contexts': [
+                {
+                    'contextname': 'test*',
+                    'contexturl': 'test_url'
+                },
+                {
+                    'contextname': 'local',
+                    'contexturl': 'local_url'
+                }
+            ]
+        }
+
+        self.list_context_current = {
+            'contexts': [{
+                'contextname': 'test*',
+                'contexturl': 'test_url'
+            }]
+        }
+
+        self.list_context_by_name = {
+            'contexts': [{
+                'contextname': 'local',
+                'contexturl': 'local_url'
+            }
+        ]}
+
+        self.list_context_by_currentname = {
+            'contexts': [{
+                'contextname': 'test*',
+                'contexturl': 'test_url'
+            }
+        ]}
+
+        self.list_nodes = [
+            {
+                'name': 'master',
+                'offline': False
+            }, {
+                'name': 'slave1',
+                'offline': False
+            }
+        ]
+        self.list_nodes_return = {
+            'nodes': [
+                {
+                    'nodename': 'master',
+                    'status': 'Online'
+                },{
+                    'nodename': 'slave1',
+                    'status': 'Online'
+                }
+            ]
+        }
+
+        self.node_info = {
+            '_class': 'hudson.slaves.SlaveComputer',
+            'actions': [{}],
+            'assignedLabels': [
+                {'name': 'prod'},
+                {'name': 'slave1'},
+                {'name': 'test'}
+            ], 
+            'description': '',
+            'displayName': 'slave1',
+            'executors': [{}],
+            'icon': 'computer.png',
+            'iconClassName': 'icon-computer',
+            'idle': True, 'jnlpAgent': False,
+            'launchSupported': True,
+            'loadStatistics': {
+                '_class': 'hudson.model.Label$1'
+            },
+            'manualLaunchAllowed': True,
+            'monitorData': {
+                'hudson.node_monitors.SwapSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2',
+                    'availablePhysicalMemory': -1,
+                    'availableSwapSpace': 878706688,
+                    'totalPhysicalMemory': -1,
+                    'totalSwapSpace': 1073741824
+                },
+                'hudson.node_monitors.TemporarySpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/private/var/folders/bw/jshtgwc171dgkvkjc3hrkt1m0000gn/T',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.DiskSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/Users/deepan/Documents/Tools/slave1',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.ArchitectureMonitor': 'Mac OS X (x86_64)',
+                'hudson.node_monitors.ResponseTimeMonitor': {
+                    '_class': 'hudson.node_monitors.ResponseTimeMonitor$Data',
+                    'timestamp': 1559214518883,
+                    'average': 195
+                },
+                'hudson.node_monitors.ClockMonitor': {
+                    '_class': 'hudson.util.ClockDifference', 'diff': -65
+                }
+            },
+            'numExecutors': 1,
+            'offline': False,
+            'offlineCause': None,
+            'offlineCauseReason': '',
+            'oneOffExecutors': [],
+            'temporarilyOffline': False,
+            'absoluteRemotePath': '/Users/deepan/Documents/Tools/slave1'
+        }
+
+        self.node_info_temp_offline = {
+            '_class': 'hudson.slaves.SlaveComputer',
+            'actions': [{}],
+            'assignedLabels': [
+                {'name': 'prod'},
+                {'name': 'slave1'},
+                {'name': 'test'}
+            ], 
+            'description': '',
+            'displayName': 'slave1',
+            'executors': [{}],
+            'icon': 'computer.png',
+            'iconClassName': 'icon-computer',
+            'idle': True, 'jnlpAgent': False,
+            'launchSupported': True,
+            'loadStatistics': {
+                '_class': 'hudson.model.Label$1'
+            },
+            'manualLaunchAllowed': True,
+            'monitorData': {
+                'hudson.node_monitors.SwapSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2',
+                    'availablePhysicalMemory': -1,
+                    'availableSwapSpace': 878706688,
+                    'totalPhysicalMemory': -1,
+                    'totalSwapSpace': 1073741824
+                },
+                'hudson.node_monitors.TemporarySpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/private/var/folders/bw/jshtgwc171dgkvkjc3hrkt1m0000gn/T',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.DiskSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/Users/deepan/Documents/Tools/slave1',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.ArchitectureMonitor': 'Mac OS X (x86_64)',
+                'hudson.node_monitors.ResponseTimeMonitor': {
+                    '_class': 'hudson.node_monitors.ResponseTimeMonitor$Data',
+                    'timestamp': 1559214518883,
+                    'average': 195
+                },
+                'hudson.node_monitors.ClockMonitor': {
+                    '_class': 'hudson.util.ClockDifference', 'diff': -65
+                }
+            },
+            'numExecutors': 1,
+            'offline': False,
+            'offlineCause': None,
+            'offlineCauseReason': '',
+            'oneOffExecutors': [],
+            'temporarilyOffline': True,
+            'absoluteRemotePath': '/Users/deepan/Documents/Tools/slave1'
+        }
+
+        self.node_info_offline = {
+            '_class': 'hudson.slaves.SlaveComputer',
+            'actions': [{}],
+            'assignedLabels': [
+                {'name': 'prod'},
+                {'name': 'slave1'},
+                {'name': 'test'}
+            ], 
+            'description': '',
+            'displayName': 'slave1',
+            'executors': [{}],
+            'icon': 'computer.png',
+            'iconClassName': 'icon-computer',
+            'idle': True, 'jnlpAgent': False,
+            'launchSupported': True,
+            'loadStatistics': {
+                '_class': 'hudson.model.Label$1'
+            },
+            'manualLaunchAllowed': True,
+            'monitorData': {
+                'hudson.node_monitors.SwapSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.SwapSpaceMonitor$MemoryUsage2',
+                    'availablePhysicalMemory': -1,
+                    'availableSwapSpace': 878706688,
+                    'totalPhysicalMemory': -1,
+                    'totalSwapSpace': 1073741824
+                },
+                'hudson.node_monitors.TemporarySpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/private/var/folders/bw/jshtgwc171dgkvkjc3hrkt1m0000gn/T',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.DiskSpaceMonitor': {
+                    '_class': 'hudson.node_monitors.DiskSpaceMonitorDescriptor$DiskSpace',
+                    'timestamp': 1559214518899,
+                    'path': '/Users/deepan/Documents/Tools/slave1',
+                    'size': 39280267264
+                },
+                'hudson.node_monitors.ArchitectureMonitor': 'Mac OS X (x86_64)',
+                'hudson.node_monitors.ResponseTimeMonitor': {
+                    '_class': 'hudson.node_monitors.ResponseTimeMonitor$Data',
+                    'timestamp': 1559214518883,
+                    'average': 195
+                },
+                'hudson.node_monitors.ClockMonitor': {
+                    '_class': 'hudson.util.ClockDifference', 'diff': -65
+                }
+            },
+            'numExecutors': 1,
+            'offline': True,
+            'offlineCause': None,
+            'offlineCauseReason': '',
+            'oneOffExecutors': [],
+            'temporarilyOffline': False,
+            'absoluteRemotePath': '/Users/deepan/Documents/Tools/slave1'
+        }
+
+        self.node_info_return = {
+            'slave1': [
+                {
+                    'Arch': 'Mac OS X (x86_64)',
+                    'Executors': 1,
+                    'Labels': 'prod, slave1, test',
+                    'Name': 'slave1',
+                    'Status': 'Online'
+                }
+            ]
+        }
+
+        self.node_info_offline_return = {
+            'slave1': [
+                {
+                    'Name': 'slave1',
+                    'Status': 'Disconnected',
+                    'Arch': 'Mac OS X (x86_64)',
+                    'Labels': 'prod, slave1, test',
+                    'Executors': 1,
+                    'Reason': ''
+                }
+            ]
+        }
+        
+        self.node_info_temp_offline_return = {
+            'slave1': [
+                {
+                    'Name': 'slave1',
+                    'Status': 'Temporarily Offline',
+                    'Arch': 'Mac OS X (x86_64)',
+                    'Labels': 'prod, slave1, test',
+                    'Executors': 1,
+                    'Reason': ''
                 }
             ]
         }

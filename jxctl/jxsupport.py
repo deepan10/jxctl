@@ -5,7 +5,8 @@ import pprint
 from tabulate import tabulate
 
 
-class JxSupport():
+# pylint:  disable=useless-object-inheritance
+class JxSupport(object):
     """
     JxSupport class for support opertions like display
     """

@@ -11,7 +11,8 @@ except ImportError:
     from .jxsupport import JxSupport
 
 
-class CtxCore():
+# pylint:  disable=useless-object-inheritance
+class CtxCore(object):
     """
     CtxCore class for context operation
     """
@@ -68,16 +69,17 @@ class CtxCore():
         try:
             with open(self.CONTEXT_FILE, "r") as context_file:
                 self.jx_context = yaml.load(context_file, Loader=yaml.SafeLoader)
+                for context in self.jx_context["contexts"]:
+                    self.context_list.append(context["name"])
+                    if context["name"] == self.jx_context["current-context"]:
+                        self.ctx_url = context["context"]["url"]
+                        self.ctx_user = context["context"]["user"]
+                        self.ctx_token = context["context"]["token"]
+                        self.ctx_name = context["name"]
         except FileNotFoundError:
             raise FileNotFoundError("File {0} not found".format(self.CONTEXT_FILE))
-
-        for context in self.jx_context["contexts"]:
-            self.context_list.append(context["name"])
-            if context["name"] == self.jx_context["current-context"]:
-                self.ctx_url = context["context"]["url"]
-                self.ctx_user = context["context"]["user"]
-                self.ctx_token = context["context"]["token"]
-                self.ctx_name = context["name"]
+        except TypeError:
+            raise TypeError()
 
     def write_context_file(self):
         """
@@ -195,12 +197,13 @@ class CtxCore():
         Delete the context
         :param `context_name`: context name `str`
         """
-        if self.jx_context["current-context"] == context_name:
-            self.jx_context["current-context"] = self.jx_context["contexts"][0]["name"]
-
         for context in self.jx_context["contexts"]:
             if context["name"] == context_name:
                 self.jx_context["contexts"].remove(context)
+
+        if self.jx_context["current-context"] == context_name:
+            self.jx_context["current-context"] = self.jx_context["contexts"][0]["name"]
+
         self.write_context_file()
 
     def rename_context(self, context_from, context_to):
@@ -214,6 +217,8 @@ class CtxCore():
                 if context["name"] == context_from:
                     context["name"] = context_to
             self.write_context_file()
+        else:
+            print("Not a valid context..")
 
     def validate_context(self):
         """

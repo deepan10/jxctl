@@ -16,7 +16,8 @@ except ImportError:
     from .jxsupport import JxSupport
 
 
-class JxCore():
+# pylint:  disable=useless-object-inheritance
+class JxCore(object):
     """
     JxCore class for Jenkins operations
     """
@@ -26,11 +27,12 @@ class JxCore():
     version = ''
     cwd = ''
 
+    # noqa  # pylint: disable=line-too-long
     JOB_TYPE = {
         "freestyle": "hudson.model.FreeStyleProject",
         "maven": "hudson.maven.MavenModuleSet",
         "pipeline": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
-        "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",  # noqa  # pylint: disable=line-too-long
+        "multi-branch": "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",
         "matrix": "hudson.matrix.MatrixProject",
         "org": "jenkins.branch.OrganizationFolder"
     }
@@ -224,9 +226,10 @@ class JxCore():
         """
         try:
             self.server.build_job(job_name, params)
-            print("jxctl >> \"%s\" triggered sucessfully" % job_name)
+            print("jxctl >> {0} triggered sucessfully".format(job_name))
         except jenkins.JenkinsException as jenkins_error:
             print(jenkins_error)
+            raise jenkins.JenkinsException("Job not found")
 
     def abort_job(self, job_name, build_number):
         """
@@ -234,7 +237,12 @@ class JxCore():
         :param `job_name`: job name `str`
         :param `build_number: build number of the job `int`
         """
-        self.server.stop_build(job_name, build_number)
+        try:
+            self.server.stop_build(job_name, build_number)
+            print("jxctl >> {0}-{1} aborted sucessfully".format(job_name, build_number))
+        except jenkins.JenkinsException as jenkins_error:
+            print(jenkins_error)
+            raise jenkins.JenkinsException("Job/Build not found")
 
     def delete_job(self, job_name):
         """
@@ -246,6 +254,7 @@ class JxCore():
             print("jxctl >> \"%s\" Job deleted" % job_name)
         except jenkins.JenkinsException as jenkins_error:
             print(jenkins_error)
+            raise jenkins.JenkinsException("Jenkins Exception")
 
     def list_nodes(self, format_display="json"):
         """

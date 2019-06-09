@@ -20,7 +20,7 @@ setuptools.setup(
     long_description=LONG_DESC,
     long_description_content_type="text/markdown",
     url="https://github.com/deepan10/jxctl",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=[
         'PyYAML>=4.2b1',

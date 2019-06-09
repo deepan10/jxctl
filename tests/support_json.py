@@ -331,6 +331,7 @@ class SupportJSON():
             ]
         }
 
+
         self.job_info = {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "actions": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {

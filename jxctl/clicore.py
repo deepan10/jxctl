@@ -194,7 +194,7 @@ def jobs(ctx,
     job_options = ["pipeline", "multi-branch", "maven", "freestyle", "matrix", "org"]
     if all:
         JxCore().list_all_jobs(format, count)
-    elif __builtins__.all(item in job_options for item in option):
+    elif option and __builtins__.all(item in job_options for item in option):
         JxCore().list_jobs(list(option), format, count)
     else:
         click.echo("Invalid Option....")

@@ -25,9 +25,8 @@ setuptools.setup(
     install_requires=[
         'PyYAML>=4.2b1',
         'Click>=7.0',
-        'requests>=2.20.1',
-        'tabulate>=0.8.2',
-        'pyfiglet>=0.7.6',
+        'requests>=2.22.0',
+        'tabulate>=0.8.3',
         'python-jenkins>=1.4.0'
     ],
     classifiers=[

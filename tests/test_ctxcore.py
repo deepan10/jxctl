@@ -9,6 +9,9 @@ from jxctl.ctxcore import CtxCore
 from .support_json import SupportJSON
 
 class TestCtxCore(unittest.TestCase):
+    """
+    Test ctxcore module
+    """
 
     def setUp(self):
         self.TEST_CONTEXT = """
@@ -41,6 +44,9 @@ class TestCtxCore(unittest.TestCase):
 
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     def test_load_context(self, _):
+        """
+        Test load_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
         self.assertEqual("test", ctx_obj.ctx_name)
@@ -48,6 +54,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("builtins.open")
     def test_load_context_raise_error(self, mock_open, _):
+        """
+        Test load_context() with exception
+        """
         mock_open.side_effect = FileNotFoundError()
         with self.assertRaises(FileNotFoundError) as exception:
             ctx_obj = CtxCore()
@@ -56,6 +65,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("yaml.load")
     def test_load_context_raise_typeerror(self, mock_yaml, _):
+        """
+        Test load_context() with exception
+        """
         mock_yaml.side_effect = TypeError()
         with patch("builtins.open", mock_open(read_data="")):
             with self.assertRaises(TypeError) as exception:
@@ -65,6 +77,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_set_current_context(self, mock_write, _):
+        """
+        Test set_current_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.set_current_context("local")
@@ -75,6 +90,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.print")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_set_current_context_invalid(self, mock_write, mock_print, _):
+        """
+        Test set_current_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.set_current_context("local-dev")
@@ -83,6 +101,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_set_context_new(self, mock_write, _):
+        """
+        Test set_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.set_context("local-test", "test-url", "test-user", "test-token", True)
@@ -92,6 +113,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_set_context(self, mock_write, _):
+        """
+        Test set_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.set_context("local", "test-url", "test-user", "test-token")
@@ -102,6 +126,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     def test_list_context_all(self, mock_print, mock_write, _):
+        """
+        Test list_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.list_context(all=True)
@@ -111,6 +138,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     def test_list_context_current(self, mock_print, mock_write, _):
+        """
+        Test list_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.list_context()
@@ -120,6 +150,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     def test_list_context_name(self, mock_print, mock_write, _):
+        """
+        Test list_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.list_context(context_name="local")
@@ -129,6 +162,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     @mock.patch("jxctl.jxsupport.JxSupport.print")
     def test_list_context_currentname(self, mock_print, mock_write, _):
+        """
+        Test list_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.list_context(context_name="test")
@@ -137,6 +173,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_delete_context(self, mock_write, _):
+        """
+        Test delete_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.delete_context("local")
@@ -146,6 +185,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_delete_currentcontext(self, mock_write, _):
+        """
+        Test delete_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.delete_context("test")
@@ -155,6 +197,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.CtxCore.write_context_file")
     def test_rename_context(self, mock_write, _):
+        """
+        Test rename_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.rename_context("local", "prod")
@@ -164,6 +209,9 @@ class TestCtxCore(unittest.TestCase):
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     @mock.patch("jxctl.ctxcore.print")
     def test_rename_context_invalid(self, mock_print, _):
+        """
+        Test rename_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             ctx_obj.rename_context("local-dev", "local")
@@ -171,6 +219,9 @@ class TestCtxCore(unittest.TestCase):
     
     @mock.patch("jxctl.ctxcore.CtxCore._set_default_context_file")
     def test_validate_context(self, mock_default_context):
+        """
+        Test validate_context()
+        """
         with patch("builtins.open", mock_open(read_data=self.TEST_CONTEXT)):
             ctx_obj = CtxCore()
             result = ctx_obj.validate_context()

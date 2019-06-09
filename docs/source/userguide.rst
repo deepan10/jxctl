@@ -79,9 +79,8 @@ Jobs List
 .. code:: bash
 
     jxctl get jobs --all -f table
-    jxctl get jobs --maven --freestyle --count -f json
-    jxctl get jobs --pipeline -c
-    jxctl get jobs --folders -f json
+    jxctl get jobs -o maven -o freestyle --count -f json
+    jxctl get jobs --option pipeline -c
 
 Folders List
 ------------
@@ -122,7 +121,7 @@ Delete a job
 ____________
 
 .. code:: bash
-    
+
     jxctl job <JOB NAME> --delete
 
 Trigger job build
@@ -137,14 +136,14 @@ Build info
 __________
 
 .. code:: bash
-    
+
     jxctl job <JOB NAME> --buildinfo <Build Number>
 
 Abort a build
 _____________
 
 .. code:: bash
-    
+
     jxctl job <JOB NAME> --abort <Build Number>
 
 Plugin

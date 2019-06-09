@@ -16,7 +16,7 @@ except ImportError:
 # Globals
 __author__ = "Deepankumar Loganathan"
 __email__ = "deepan0433@gmail.com"
-__version__ = "0.0.8b"
+__version__ = "1.0.0"
 __pypi__ = "https://pypi.org/project/jxctl/"
 
 # pylint:  disable=anomalous-backslash-in-string
@@ -165,29 +165,15 @@ def set_current(context_name):
 @click.option("--count", "-c",
               is_flag=True,
               help="Returns number of jobs")
-@click.option("--all",
+@click.option("--all", "-a",
               is_flag=True,
-              help="List all(maven, \
-                freestly, pipeline, \
-                multi-branch, matrix and org) jobs")
-@click.option("--maven",
-              is_flag=True,
-              help="List all maven style jobs")
-@click.option("--freestyle",
-              is_flag=True,
-              help="List all freestyle jobs")
-@click.option("--pipeline",
-              is_flag=True,
-              help="List all pipeline jobs")
-@click.option("--multi-branch",
-              is_flag=True,
-              help="List all multi-branch pipeline jobs")
-@click.option("--matrix",
-              is_flag=True,
-              help="List all matrix jobs")
-@click.option("--org",
-              is_flag=True,
-              help="List all Organization jobs")
+              help="List all(maven,"
+                   "freestly, pipeline"
+                   "multi-branch, matrix and org) jobs")
+@click.option("--option", "-o",
+              multiple=True,
+              help="Possible Options\n"
+                   "pipeline, multi-branch, maven, freestyle, matrix, org")
 @click.option("-f", "--format", nargs=1, required=False,
               help="Display format(json/table). Default=json")
 @click.option("--help",
@@ -200,42 +186,19 @@ def set_current(context_name):
 def jobs(ctx,
          count,
          all,
-         maven,
-         freestyle,
-         pipeline,
-         multi_branch,
-         matrix,
-         org,
+         option,
          format):
     """
     Get list of job from jenkins
     """
-    option_dist = {"all": all,
-                   "maven": maven,
-                   "freestyle": freestyle,
-                   "pipeline": pipeline,
-                   "multi-branch": multi_branch,
-                   "matrix": matrix,
-                   "org": org}
-    option_list = []
-    if any(option_dist.values()):
-        if count:
-            if not all:
-                for item in option_dist:
-                    if option_dist[item]:
-                        option_list.append(item)
-                JxCore().list_jobs(option_list, format, count=True)
-            else:
-                JxCore().list_all_jobs(format, count=True)
-        elif all:
-            JxCore().list_all_jobs(format)
-        else:
-            for item in option_dist:
-                if option_dist[item]:
-                    option_list.append(item)
-            JxCore().list_jobs(option_list, format)
+    job_options = ["pipeline", "multi-branch", "maven", "freestyle", "matrix", "org"]
+    if all:
+        JxCore().list_all_jobs(format, count)
+    elif option and __builtins__.all(item in job_options for item in option):
+        JxCore().list_jobs(list(option), format, count)
     else:
-        print_help(ctx, None, value=True)
+        click.echo("Invalid Option....")
+        click.echo(ctx.get_help())
 
 
 @get.command("folders")

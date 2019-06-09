@@ -1,3 +1,7 @@
+"""
+SuppotJSON module
+"""
+# pylint:  disable=too-few-public-methods, too-many-instance-attributes, line-too-long
 class SupportJSON():
     """
     Support Jenkins API JSON for testing
@@ -24,7 +28,7 @@ class SupportJSON():
                         "color": "notbuilt",
                         "fullname": "test-folder/test-sub-folder/subfolder-freestyle-job"
                     }],
-                "fullname": "test-folder/test-sub-folder"
+                    "fullname": "test-folder/test-sub-folder"
                 }],
                 "fullname": "test-folder"
             }, {
@@ -60,38 +64,38 @@ class SupportJSON():
             }]
 
         self.all_jobs_return = [
-                ["maven-test-job", "http://localhost:8080/job/maven-test-job/"],
-                ["test-freestyle-job", "http://localhost:8080/job/test-freestyle-job/"], 
-                ["pipeline-test-job", "http://localhost:8080/job/pipeline-test-job/"],
-                ["test-folder/test-sub-folder/subfolder-freestyle-job", "http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/"]
-            ]
-        
+            ["maven-test-job", "http://localhost:8080/job/maven-test-job/"],
+            ["test-freestyle-job", "http://localhost:8080/job/test-freestyle-job/"],
+            ["pipeline-test-job", "http://localhost:8080/job/pipeline-test-job/"],
+            ["test-folder/test-sub-folder/subfolder-freestyle-job", "http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/"]
+        ]
+
         self.maven_pipeline_return = [
-                ["maven-test-job", "http://localhost:8080/job/maven-test-job/"],
-                ["pipeline-test-job", "http://localhost:8080/job/pipeline-test-job/"]
-            ]
-        
+            ["maven-test-job", "http://localhost:8080/job/maven-test-job/"],
+            ["pipeline-test-job", "http://localhost:8080/job/pipeline-test-job/"]
+        ]
+
         self.freestyle_jobs = [
-                ["test-freestyle-job", "http://localhost:8080/job/test-freestyle-job/"], 
-                ["test-folder/test-sub-folder/subfolder-freestyle-job", "http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/"]
-            ]
+            ["test-freestyle-job", "http://localhost:8080/job/test-freestyle-job/"],
+            ["test-folder/test-sub-folder/subfolder-freestyle-job", "http://localhost:8080/job/test-folder/job/test-sub-folder/job/subfolder-freestyle-job/"]
+        ]
 
         self.plugins_list = [{
-                "active": True,
-                "backupVersion": None,
-                "bundled": False,
-                "deleted": False,
-                "dependencies": [],
-                "downgradable": False,
-                "enabled": True,
-                "hasUpdate": False,
-                "longName": "Folders Plugin",
-                "pinned": False,
-                "requiredCoreVersion": "2.60.3",
-                "shortName": "cloudbees-folder",
-                "supportsDynamicLoad": "MAYBE",
-                "url": "https://wiki.jenkins.io/display/JENKINS/CloudBees+Folders+Plugin",
-                "version": 6.5
+            "active": True,
+            "backupVersion": None,
+            "bundled": False,
+            "deleted": False,
+            "dependencies": [],
+            "downgradable": False,
+            "enabled": True,
+            "hasUpdate": False,
+            "longName": "Folders Plugin",
+            "pinned": False,
+            "requiredCoreVersion": "2.60.3",
+            "shortName": "cloudbees-folder",
+            "supportsDynamicLoad": "MAYBE",
+            "url": "https://wiki.jenkins.io/display/JENKINS/CloudBees+Folders+Plugin",
+            "version": 6.5
             }, {
                 "active": True,
                 "backupVersion": None,
@@ -195,13 +199,13 @@ class SupportJSON():
             }]
 
         self.plugins_list_return = {"plugins" : [
-                {"pluginname" : "Folders Plugin", "pluginkey" : "cloudbees-folder", "version" : 6.5},
-                {"pluginname" : "Structs Plugin", "pluginkey" : "structs", "version" : 1.17},
-                {"pluginname" : "bouncycastle API Plugin", "pluginkey" : "bouncycastle-api", "version" : 2.17},
-                {"pluginname" : "Script Security Plugin", "pluginkey" : "script-security", "version" : 1.49},
-                {"pluginname" : "Pipeline: Step API", "pluginkey" : "workflow-step-api", "version" : 2.17},
-                {"pluginname" : "SCM API Plugin", "pluginkey" : "scm-api", "version" : 2.3}
-            ]}
+            {"pluginname" : "Folders Plugin", "pluginkey" : "cloudbees-folder", "version" : 6.5},
+            {"pluginname" : "Structs Plugin", "pluginkey" : "structs", "version" : 1.17},
+            {"pluginname" : "bouncycastle API Plugin", "pluginkey" : "bouncycastle-api", "version" : 2.17},
+            {"pluginname" : "Script Security Plugin", "pluginkey" : "script-security", "version" : 1.49},
+            {"pluginname" : "Pipeline: Step API", "pluginkey" : "workflow-step-api", "version" : 2.17},
+            {"pluginname" : "SCM API Plugin", "pluginkey" : "scm-api", "version" : 2.3}
+        ]}
 
         self.folders_list = [
             {
@@ -226,14 +230,14 @@ class SupportJSON():
                 '_class': 'com.cloudbees.hudson.plugins.folder.Folder',
                 'fullname': 'folder1',
                 'jobs': [{'_class': 'com.cloudbees.hudson.plugins.folder.Folder',
-                            'fullname': 'folder1/sub_folder1',
-                            'jobs': [{'_class': 'hudson.model.FreeStyleProject',
+                          'fullname': 'folder1/sub_folder1',
+                          'jobs': [{'_class': 'hudson.model.FreeStyleProject',
                                     'color': 'blue',
                                     'fullname': 'folder1/sub_folder1/test',
                                     'name': 'test',
                                     'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}],
-                            'name': 'sub_folder1',
-                            'url': 'http://localhost:8080/job/folder1/job/sub_folder1/'}],
+                          'name': 'sub_folder1',
+                          'url': 'http://localhost:8080/job/folder1/job/sub_folder1/'}],
                 'name': 'folder1',
                 'url': 'http://localhost:8080/job/folder1/'},
             {
@@ -300,10 +304,10 @@ class SupportJSON():
                 '_class': 'com.cloudbees.hudson.plugins.folder.Folder',
                 'fullname': 'folder1/sub_folder1',
                 'jobs': [{'_class': 'hudson.model.FreeStyleProject',
-                            'color': 'blue',
-                            'fullname': 'folder1/sub_folder1/test',
-                            'name': 'test',
-                            'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}],
+                          'color': 'blue',
+                          'fullname': 'folder1/sub_folder1/test',
+                          'name': 'test',
+                          'url': 'http://localhost:8080/job/folder1/job/sub_folder1/job/test/'}],
                 'name': 'sub_folder1',
                 'url': 'http://localhost:8080/job/folder1/job/sub_folder1/'},
             {
@@ -326,7 +330,8 @@ class SupportJSON():
                 }
             ]
         }
-        
+
+
         self.job_info = {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowJob",
             "actions": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {
@@ -424,7 +429,7 @@ class SupportJSON():
             }]
         }
 
-        self.build_info ={
+        self.build_info = {
             "_class": "org.jenkinsci.plugins.workflow.job.WorkflowRun",
             "actions": [{
                 "_class": "hudson.model.CauseAction",
@@ -617,15 +622,15 @@ class SupportJSON():
             'contexts': [{
                 'contextname': 'local',
                 'contexturl': 'local_url'
-            }
-        ]}
+            }]
+        }
 
         self.list_context_by_currentname = {
             'contexts': [{
                 'contextname': 'test*',
                 'contexturl': 'test_url'
-            }
-        ]}
+            }]
+        }
 
         self.list_nodes = [
             {
@@ -641,7 +646,7 @@ class SupportJSON():
                 {
                     'nodename': 'master',
                     'status': 'Online'
-                },{
+                }, {
                     'nodename': 'slave1',
                     'status': 'Online'
                 }
@@ -655,7 +660,7 @@ class SupportJSON():
                 {'name': 'prod'},
                 {'name': 'slave1'},
                 {'name': 'test'}
-            ], 
+            ],
             'description': '',
             'displayName': 'slave1',
             'executors': [{}],
@@ -713,7 +718,7 @@ class SupportJSON():
                 {'name': 'prod'},
                 {'name': 'slave1'},
                 {'name': 'test'}
-            ], 
+            ],
             'description': '',
             'displayName': 'slave1',
             'executors': [{}],
@@ -771,7 +776,7 @@ class SupportJSON():
                 {'name': 'prod'},
                 {'name': 'slave1'},
                 {'name': 'test'}
-            ], 
+            ],
             'description': '',
             'displayName': 'slave1',
             'executors': [{}],
@@ -846,7 +851,7 @@ class SupportJSON():
                 }
             ]
         }
-        
+
         self.node_info_temp_offline_return = {
             'slave1': [
                 {

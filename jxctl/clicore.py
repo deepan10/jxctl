@@ -16,7 +16,7 @@ except ImportError:
 # Globals
 __author__ = "Deepankumar Loganathan"
 __email__ = "deepan0433@gmail.com"
-__version__ = "0.0.8b"
+__version__ = "1.0.0"
 __pypi__ = "https://pypi.org/project/jxctl/"
 
 # pylint:  disable=anomalous-backslash-in-string

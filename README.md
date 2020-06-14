@@ -1,6 +1,7 @@
 # `jxctl` 
 ![CircleCI (all branches)](https://img.shields.io/circleci/project/github/deepan10/jxctl.svg?style=plastic)  ![GitHub](https://img.shields.io/github/license/deepan10/jxctl.svg?style=plastic)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2f1b7a4042cd43828ed32762b91bb9b1)](https://app.codacy.com/manual/deepan10/jxctl?utm_source=github.com&utm_medium=referral&utm_content=deepan10/jxctl&utm_campaign=Badge_Grade_Dashboard)
 [![codecov](https://codecov.io/gh/deepan10/jxctl/branch/master/graph/badge.svg)](https://codecov.io/gh/deepan10/jxctl)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jxctl&metric=coverage)](https://sonarcloud.io/dashboard?id=jxctl)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jxctl&metric=alert_status)](https://sonarcloud.io/dashboard?id=jxctl)

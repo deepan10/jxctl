@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-curl --user 81304b67631759c78b65b4c073bb179f9c165eb3: \
+curl --user c7c8d2532707aaec6f686eaab4fc833883caa548: \
     --request POST \
     --form config=@config.yml \
     --form notify=false \

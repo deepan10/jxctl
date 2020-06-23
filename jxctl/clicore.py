@@ -59,6 +59,7 @@ def get():
     """
     pass
 
+
 # pylint: disable=unnecessary-pass
 @main.group()
 def context():
@@ -84,6 +85,7 @@ def version():
     click.echo("Email: " + __email__)
     click.echo("PyPI: " + __pypi__)
     click.echo("=========================================")
+
 
 # pylint: disable=redefined-builtin
 @context.command("list")
@@ -260,6 +262,7 @@ def node(node_name, make_offline, make_online, message, format):
         JxCore().node_action(node_name, "online")
     else:
         JxCore().node_info(node_name, format)
+
 
 # pylint:  disable=too-many-arguments
 @main.command("job")

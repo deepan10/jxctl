@@ -2,6 +2,7 @@
 jxcore - Core module to intract with Jenkins API
 """
 import os
+import sys
 import time
 import pprint
 import jenkins
@@ -58,10 +59,10 @@ class JxCore(object):
                 self.cwd = os.getcwd()
             except jenkins.JenkinsException as server_error:
                 print("Init Context Core", server_error)
-                exit()
+                sys.exit(-1)
         else:
             print("Invalid Jenkins Context ...")
-            exit()
+            sys.exit(-1)
 
     def info(self):
         """
@@ -283,7 +284,7 @@ class JxCore(object):
             "Status": "Online",
             "Arch": node_json["monitorData"]["hudson.node_monitors.ArchitectureMonitor"],
             "Labels": ", ".join(
-                list(l["name"] for l in node_json["assignedLabels"])
+                list(_labels["name"] for _labels in node_json["assignedLabels"])
             ),
             "Executors": node_json["numExecutors"]
         }

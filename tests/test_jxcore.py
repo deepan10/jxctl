@@ -6,7 +6,7 @@ from .support_json import SupportJSON
 import jenkins
 class JxCoreTest(unittest.TestCase):
 
-    @mock.patch("builtins.exit")
+    @mock.patch("sys.exit")
     @mock.patch("jxctl.jxcore.CtxCore")
     @mock.patch("jenkins.Jenkins")
     def test_jxcore_init_exception(self, mock_jenkins, mock_ctxcore, mock_exit): 
@@ -15,7 +15,7 @@ class JxCoreTest(unittest.TestCase):
         jxcore = JxCore()
         mock_exit.assert_called_once()
     
-    @mock.patch("builtins.exit")
+    @mock.patch("sys.exit")
     @mock.patch("jxctl.jxcore.CtxCore")
     @mock.patch("jenkins.Jenkins")
     def test_jxcore_invalid_context(self, mock_jenkins, mock_ctxcore, mock_exit): 

@@ -23,11 +23,11 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=["tests"]),
     include_package_data=True,
     install_requires=[
-        'PyYAML>=4.2b1',
-        'Click>=7.0',
-        'requests>=2.22.0',
-        'tabulate>=0.8.3',
-        'python-jenkins>=1.4.0'
+        'PyYAML>=5.3.1',
+        'Click>=7.1.2',
+        'requests>=2.24.0',
+        'tabulate>=0.8.7',
+        'python-jenkins>=1.7.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",
